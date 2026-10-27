@@ -1,0 +1,27 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Run SiapLI (Flask)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/app.py",
+      "console": "integratedTerminal",
+      "python": "${workspaceFolder}/venv/bin/python",
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "FLASK_DEBUG": "1"
+      },
+      "justMyCode": true
+    },
+    {
+      "name": "Run SiapLI Smoke Test",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/smoke_test.py",
+      "console": "integratedTerminal",
+      "python": "${workspaceFolder}/venv/bin/python",
+      "cwd": "${workspaceFolder}"
+    }
+  ]
+}
