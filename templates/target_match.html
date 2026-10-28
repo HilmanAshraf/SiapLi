@@ -107,10 +107,10 @@
       </div>
 
       <div class="alert alert-light border mt-3 mb-3 small">
-        <strong>Why it's related:</strong>
-        shares {{ a.relatedness }} skill{{ '' if a.relatedness == 1 else 's' }}
-        with {{ tp.title }} ({{ a.shared_with_target | join(", ") }}),
-        and doesn't require the skills you're missing for your target.
+        <strong>Why it's a good alternative:</strong> {{ a.why }}
+        <div class="mt-1 text-muted">
+          Shared skills with {{ tp.title }}: {{ a.shared_with_target | join(", ") }}
+        </div>
       </div>
 
       <div class="row">

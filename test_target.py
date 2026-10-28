@@ -47,17 +47,24 @@ def main():
     titles = [a["posting"]["title"] for a in alts]
     print(f"Option 2 OK — alternatives: {titles}")
 
-    # Data-grounded checks: no alternative may require a target gap skill.
+    # Data-grounded checks: each alternative must be MORE achievable than the
+    # target — it demands fewer of the student's missing skills, and shares at
+    # least one real skill with the target role.
     target_gap = set(best["gap"])
     for a in alts:
         req = set(a["posting"]["skills"])
-        assert not (req & target_gap), \
-            f"{a['posting']['title']} wrongly requires a target gap skill"
+        shared_gaps = req & target_gap
+        assert len(shared_gaps) < len(target_gap), \
+            f"{a['posting']['title']} does not lower the skill barrier"
+        assert len(a["gap"]) < len(best["gap"]) \
+            or a["skill_coverage"] > best["skill_coverage"], \
+            f"{a['posting']['title']} is not more achievable than the target"
         assert a["shared_with_target"], "alternative must share a skill"
+        assert a["why"], "alternative should explain why it's a good fit"
     # IT Support Intern is the spec's example alternative — confirm it appears.
     assert "IT Support Intern" in titles, \
         f"expected IT Support Intern among alternatives, got {titles}"
-    print("Alternatives are data-grounded (no target-gap skills required).")
+    print("Alternatives are data-grounded and more achievable than the target.")
 
     # --- Web routes ---
     client = flask_app.app.test_client()

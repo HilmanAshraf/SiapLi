@@ -211,6 +211,7 @@ def alternative_roles(resume_skills, postings, target_id, top_n=4,
 
     target_required = set(target.get("skills", []))
     target_gap = set(skill_gap(resume_skills, target.get("skills", [])))
+    target_matched = set(matched_skills(resume_skills, target.get("skills", [])))
 
     alternatives = []
     for p in postings:
@@ -222,22 +223,50 @@ def alternative_roles(resume_skills, postings, target_id, top_n=4,
         if len(shared) < min_relatedness:
             continue  # not related enough to the target role
 
-        # Must NOT require the exact skills blocking the student in the target.
-        if required & target_gap:
+        # How many of the student's target gaps does this role also demand?
+        shared_gaps = required & target_gap
+        # It must lower the barrier: demand FEWER of the missing skills than
+        # the target role does (data-grounded, verified from the listing).
+        if len(shared_gaps) >= len(target_gap) and len(target_gap) > 0:
             continue
 
         info = evaluate_posting(resume_skills, p)
-        target_coverage = (len(target_required - target_gap)
-                           / len(target_required) * 100) if target_required else 0.0
-        if info["skill_coverage"] <= target_coverage:
-            continue  # not a better fit than the target itself
+
+        # It must be more achievable: student is missing fewer skills here,
+        # or already covers a higher share than for the target role.
+        target_coverage = (len(target_matched) / len(target_required) * 100) \
+            if target_required else 0.0
+        fewer_gaps = len(info["gap"]) < len(target_gap)
+        better_coverage = info["skill_coverage"] > target_coverage
+        if not (fewer_gaps or better_coverage):
+            continue
 
         info["shared_with_target"] = shared
         info["relatedness"] = len(shared)
-        info["avoids_target_gaps"] = sorted(target_gap)
+        info["gaps_avoided"] = sorted(target_gap - required)   # gaps you skip
+        info["gaps_reduced_by"] = max(0, len(target_gap) - len(info["gap"]))
+
+        # A short, encouraging explanation for the student.
+        reasons = []
+        reasons.append(
+            "shares " + str(len(shared)) + " skill"
+            + ("" if len(shared) == 1 else "s")
+            + " with " + target.get("title", "your target"))
+        if info["gaps_avoided"]:
+            reasons.append("you can skip learning "
+                           + ", ".join(info["gaps_avoided"][:3]))
+        if info["gap"]:
+            reasons.append("only " + str(len(info["gap"]))
+                           + " skill" + ("" if len(info["gap"]) == 1 else "s")
+                           + " left to learn")
+        else:
+            reasons.append("you already meet every required skill")
+        info["why"] = "; ".join(reasons) + "."
+
         alternatives.append(info)
 
-    # Best fit first; then most related to the target.
-    alternatives.sort(key=lambda x: (x["skill_coverage"], x["relatedness"]),
-                      reverse=True)
+    # Most achievable first: highest coverage, then fewest gaps, then relatedness.
+    alternatives.sort(
+        key=lambda x: (x["skill_coverage"], -len(x["gap"]), x["relatedness"]),
+        reverse=True)
     return alternatives[:top_n]

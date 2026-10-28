@@ -188,6 +188,40 @@ POSTINGS = [
      "Build backend services in Java with Spring Boot. Work with SQL and Git. "
      "Problem solving and teamwork required.",
      ["Java", "Spring Boot", "SQL", "Git", "Problem Solving", "Teamwork"]),
+    # --- Entry-level "bridge" roles: easier stepping stones that share skills
+    #     with harder roles, so students always see achievable alternatives. ---
+    ("Junior Web Assistant Intern", "StartRight Digital", "Kuala Lumpur",
+     "Assist with simple website updates using HTML, CSS and Git. Great entry "
+     "point for aspiring developers. Teamwork and eagerness to learn valued.",
+     ["HTML", "CSS", "Git", "Teamwork", "Communication"]),
+    ("Data Entry & Reporting Intern", "InsightWorks", "Petaling Jaya",
+     "Enter data and build simple reports in Excel and SQL. A stepping stone "
+     "into data analytics. Attention to detail and communication needed.",
+     ["Excel", "SQL", "Data Entry", "Attention to Detail", "Communication"]),
+    ("IT Helpdesk Assistant Intern", "HelpDesk Solutions", "Shah Alam",
+     "Front-line tech support on Windows and Linux. Great first step toward "
+     "networking or security roles. Communication and problem solving needed.",
+     ["Linux", "Networking", "Customer Service", "Communication", "Problem Solving"]),
+    ("Junior Python Intern", "CodeStart Labs", "Cyberjaya",
+     "Learn and build small tools in Python with Git. An approachable entry "
+     "into software, data and AI tracks. Problem solving encouraged.",
+     ["Python", "Git", "Problem Solving", "Teamwork", "Communication"]),
+    ("Marketing Assistant Intern", "GrowthLab", "Kuala Lumpur",
+     "Support content and social posts. A friendly entry into digital "
+     "marketing. Creativity, communication and attention to detail needed.",
+     ["Content Writing", "Communication", "Creativity", "Attention to Detail", "Canva"]),
+    ("Junior QA Intern", "QualityFirst", "Penang",
+     "Learn software testing: run test cases and log issues with Postman and "
+     "Git. A gentle start toward QA automation. Attention to detail needed.",
+     ["Postman", "Git", "Attention to Detail", "Problem Solving", "Communication"]),
+    ("Associate UI Intern", "DesignHive", "Kuala Lumpur",
+     "Support designers in Figma on real projects. A welcoming first step into "
+     "UI/UX. Creativity and collaboration valued.",
+     ["Figma", "Creativity", "Collaboration", "Communication", "Attention to Detail"]),
+    ("Cloud Fundamentals Intern", "SkyStack", "Cyberjaya",
+     "Learn cloud basics on AWS with Linux and Git. A stepping stone toward "
+     "DevOps and cloud engineering. Problem solving encouraged.",
+     ["AWS", "Linux", "Git", "Problem Solving", "Communication"]),
 ]
 
 # ---------------------------------------------------------------------------
@@ -329,6 +363,46 @@ COURSE_MAP = {
     "REST API": "https://restfulapi.net/",
     "Apache Spark": "https://spark.apache.org/docs/latest/quick-start.html",
     "Bash": "https://www.learnshell.org/",
+    # --- Languages / frameworks previously uncovered ---
+    "C#": "https://learn.microsoft.com/en-us/dotnet/csharp/",
+    "PHP": "https://www.phptutorial.net/",
+    "Dart": "https://dart.dev/language",
+    "Express": "https://expressjs.com/en/starter/installing.html",
+    "iOS": "https://developer.apple.com/tutorials/app-dev-training",
+    "Jetpack Compose": "https://developer.android.com/jetpack/compose/tutorial",
+    "Firebase": "https://firebase.google.com/docs",
+    "Azure": "https://learn.microsoft.com/en-us/training/azure/",
+    "Terraform": "https://developer.hashicorp.com/terraform/tutorials",
+    "Jenkins": "https://www.jenkins.io/doc/tutorials/",
+    "Big Data": "https://www.ibm.com/think/topics/big-data",
+    "Matplotlib": "https://matplotlib.org/stable/tutorials/index.html",
+    "Natural Language Processing": "https://www.nltk.org/book/",
+    "Computer Vision": "https://opencv.org/get-started/",
+    "TCP/IP": "https://www.cloudflare.com/learning/ddos/glossary/tcp-ip/",
+    "Postman": "https://learning.postman.com/docs/getting-started/overview/",
+    "Unit Testing": "https://docs.pytest.org/en/stable/getting-started.html",
+    # --- Design / content / business previously uncovered ---
+    "Adobe XD": "https://helpx.adobe.com/xd/tutorials.html",
+    "UI/UX Design": "https://www.coursera.org/learn/ui-ux-design",
+    "Graphic Design": "https://www.coursera.org/learn/fundamentals-of-graphic-design",
+    "Video Editing": "https://www.youtube.com/learningvideoediting",
+    "Content Writing": "https://www.hubspot.com/resources/courses/content-marketing",
+    "Business Analysis": "https://www.coursera.org/learn/business-analysis-foundations",
+    "Project Management": "https://www.coursera.org/learn/project-management-basics",
+    "Accounting": "https://www.khanacademy.org/economics-finance-domain/core-finance/accounting-and-financial-stateme",
+    "Financial Analysis": "https://corporatefinanceinstitute.com/resources/accounting/",
+    # --- Soft skills (free, to motivate and round out the student) ---
+    "Teamwork": "https://www.coursera.org/learn/teamwork-skills-effective-communication",
+    "Collaboration": "https://www.coursera.org/learn/teamwork-skills-effective-communication",
+    "Problem Solving": "https://www.coursera.org/learn/problem-solving",
+    "Critical Thinking": "https://www.coursera.org/learn/mindware",
+    "Creativity": "https://www.coursera.org/learn/creativity-innovation",
+    "Time Management": "https://www.coursera.org/learn/work-smarter-not-harder",
+    "Attention to Detail": "https://www.open.edu/openlearn/education-development/learning-learn",
+    "Canva": "https://www.canva.com/designschool/",
+    "Customer Service": "https://www.hubspot.com/resources/courses/customer-service",
+    "Data Entry": "https://www.gcfglobal.org/en/excel/",
+    "Communication": "https://www.coursera.org/learn/wharton-communication-skills",
 }
 
 
