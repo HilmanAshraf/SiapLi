@@ -61,12 +61,14 @@ As long as these hold, `app.py` needs no changes when P2 swaps in real NLP.
 
 ## Data sourcing, copyright & privacy
 
-- **Internship listings:** the real postings (`real_internships.csv`) are public
-  internship adverts aggregated by [Prosple](https://prosple.com), used for this
-  **non-commercial student prototype**. Descriptions are paraphrased in our own
-  words (not copied verbatim). We did not scrape sites that forbid it, and we
-  never invent apply URLs. A production version would use official employer or
-  university feeds. Full notes: `pitch/DATA_SOURCING.md`.
+- **Internship listings:** `real_internships.csv` contains real Malaysian roles
+  and companies. Each **Apply Now** button opens a **live LinkedIn job search**
+  for that field (e.g. `keywords=network+engineer+intern&location=Malaysia`), so
+  links show current openings and never expire. Descriptions are written in our
+  own words (not copied); apply links are search-query URLs (no scraping, no
+  invented vacancies, no homepage substitutes). This is a **non-commercial
+  student prototype**; production would deep-link to each employer's own
+  application page. Full notes: `pitch/DATA_SOURCING.md`.
 - **Job postings contain no personal data** — they are company adverts.
 - **Student resumes (the sensitive data):** the raw file is never stored, PII is
   removed before any analysis, consent is required, and data can be deleted at

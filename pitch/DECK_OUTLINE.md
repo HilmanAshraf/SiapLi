@@ -44,12 +44,14 @@ Suggested length: 8–10 slides, ~5 min pitch + Q&A.
 - Human-in-the-loop: scores are decision support, not gatekeeping.
 - Bias noted; mitigated by showing the explainable skill list.
 - **Data sourcing & copyright** (full notes in pitch/DATA_SOURCING.md):
-  - Internship listings are PUBLIC postings aggregated via Prosple for this
-    prototype; descriptions paraphrased in our own words (not copied verbatim).
-  - No scraping of sites that forbid it; no invented apply URLs; no homepage
-    substitutes.
-  - Honest line to say: "Listings are public postings aggregated for the
-    prototype; production would use official employer feeds."
+  - Roles/companies are real Malaysian internships; descriptions are in our own
+    words (not copied). Apply opens a LIVE LinkedIn search for that field.
+  - We use broad field keywords (e.g. "network engineer intern") so the search
+    returns current openings and never a dead/expired link.
+  - No scraping; search-URLs only; no invented vacancies; no homepage substitute.
+  - Honest line to say: "Apply opens a live LinkedIn search for that role, so
+    students see current openings, not expired links; production would deep-link
+    to each employer's own application page."
   - Job postings contain NO personal data — the privacy care is on the resume.
 
 ## Slide 7 — Validation  ← SCORED 4/10 (judge feedback)
