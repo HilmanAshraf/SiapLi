@@ -67,8 +67,16 @@
     </div>
 
     <hr>
-    <a href="{{ url_for('resume_feedback', resume_id=resume.id, role=tp.id) }}"
-       class="btn btn-dark">💡 Get AI resume feedback for this role</a>
+    <div class="d-flex flex-wrap gap-2 align-items-center">
+      {% if tp.apply_url %}
+        <a href="{{ tp.apply_url }}" target="_blank" rel="noopener noreferrer"
+           class="btn btn-success">Apply Now ↗</a>
+      {% else %}
+        <span class="text-muted small">Application link unavailable</span>
+      {% endif %}
+      <a href="{{ url_for('resume_feedback', resume_id=resume.id, role=tp.id) }}"
+         class="btn btn-dark">💡 Get AI resume feedback for this role</a>
+    </div>
   </div>
 </div>
 
@@ -150,6 +158,14 @@
           {% endif %}
         </div>
       </div>
+
+      <hr>
+      {% if a.posting.apply_url %}
+        <a href="{{ a.posting.apply_url }}" target="_blank" rel="noopener noreferrer"
+           class="btn btn-success btn-sm">Apply Now ↗</a>
+      {% else %}
+        <span class="text-muted small">Application link unavailable</span>
+      {% endif %}
     </div>
   </div>
 {% endfor %}

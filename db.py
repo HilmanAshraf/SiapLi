@@ -46,7 +46,7 @@ def init_db():
             location      TEXT,
             description   TEXT NOT NULL,
             skills_json   TEXT DEFAULT '[]',   -- JSON array of required skills
-            source_url    TEXT,
+            apply_url     TEXT,                -- real application link (never invented)
             created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
         """
@@ -93,6 +93,18 @@ def init_db():
     )
 
     conn.commit()
+
+    # --- Migration: ensure postings has an `apply_url` column ---
+    # Older databases may have the legacy `source_url` column; rename-by-copy so
+    # no existing data is lost. New databases already have `apply_url`.
+    cols = [r["name"] for r in conn.execute("PRAGMA table_info(postings)")]
+    if "apply_url" not in cols:
+        conn.execute("ALTER TABLE postings ADD COLUMN apply_url TEXT")
+        if "source_url" in cols:
+            conn.execute("UPDATE postings SET apply_url = source_url "
+                         "WHERE apply_url IS NULL")
+        conn.commit()
+
     conn.close()
 
 
@@ -101,15 +113,15 @@ def init_db():
 # ---------------------------------------------------------------------------
 
 def add_posting(title, description, company=None, location=None,
-                skills=None, source_url=None):
+                skills=None, apply_url=None):
     conn = get_connection()
     cur = conn.cursor()
     cur.execute(
         """INSERT INTO postings (title, company, location, description,
-                                 skills_json, source_url)
+                                 skills_json, apply_url)
            VALUES (?, ?, ?, ?, ?, ?)""",
         (title, company, location, description,
-         json.dumps(skills or []), source_url),
+         json.dumps(skills or []), apply_url),
     )
     conn.commit()
     posting_id = cur.lastrowid
@@ -164,6 +176,45 @@ def get_all_postings():
     rows = conn.execute("SELECT * FROM postings").fetchall()
     conn.close()
     return [dict(r) for r in rows]
+
+
+def import_postings_csv(csv_path):
+    """
+    Import internship postings from a CSV file.
+
+    Expected columns (header row, case-insensitive):
+        title, company, location, description, skills, apply_url
+      - `skills` is a semicolon- or comma-separated list.
+      - `apply_url` is the REAL application link (leave blank if unknown;
+        we never invent URLs).
+
+    Returns the number of rows imported.
+    """
+    import csv
+
+    count = 0
+    with open(csv_path, newline="", encoding="utf-8") as fh:
+        reader = csv.DictReader(fh)
+        # Normalise headers to lowercase for forgiving matching.
+        for raw in reader:
+            row = {(k or "").strip().lower(): (v or "").strip()
+                   for k, v in raw.items()}
+            title = row.get("title")
+            if not title:
+                continue
+            skills_raw = row.get("skills", "")
+            sep = ";" if ";" in skills_raw else ","
+            skills = [s.strip() for s in skills_raw.split(sep) if s.strip()]
+            add_posting(
+                title=title,
+                description=row.get("description", ""),
+                company=row.get("company") or None,
+                location=row.get("location") or None,
+                skills=skills,
+                apply_url=row.get("apply_url") or None,
+            )
+            count += 1
+    return count
 
 
 def get_top_matches(resume_id, limit=3):

@@ -32,6 +32,13 @@
             {% else %}
               <p class="msg">You meet every required skill for this role.</p>
             {% endif %}
+            <div class="apply-row">
+              {% if tp.apply_url %}
+                <a href="{{ tp.apply_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-ink btn-sm">Apply Now ↗</a>
+              {% else %}
+                <span class="muted">Application link unavailable</span>
+              {% endif %}
+            </div>
           </div>
 
           <h2 class="group-head group-grow reveal">Alternative related roles</h2>
@@ -50,6 +57,13 @@
               <div class="chips">
                 {% for s in a.matched %}<span class="chip chip-have">{{ s }}</span>{% endfor %}
                 {% for s in a.gap %}<span class="chip chip-miss">{{ s }}</span>{% endfor %}
+              </div>
+              <div class="apply-row">
+                {% if a.posting.apply_url %}
+                  <a href="{{ a.posting.apply_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-ink btn-sm">Apply Now ↗</a>
+                {% else %}
+                  <span class="muted">Application link unavailable</span>
+                {% endif %}
               </div>
             </div>
           {% endfor %}
@@ -76,6 +90,13 @@
               {% else %}
                 <p class="msg">You meet every required skill. Apply with confidence.</p>
               {% endif %}
+              <div class="apply-row">
+                {% if m.posting.apply_url %}
+                  <a href="{{ m.posting.apply_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-ink btn-sm">Apply Now ↗</a>
+                {% else %}
+                  <span class="muted">Application link unavailable</span>
+                {% endif %}
+              </div>
             </div>
           {% endfor %}
           <p class="muted reveal" style="margin-top:14px">
