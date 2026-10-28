@@ -25,6 +25,7 @@ from flask import (Flask, flash, redirect, render_template,
                    request, url_for)
 
 import db
+import feedback as feedback_engine
 import fields
 import matching
 import nlp  # real NLP module (P2); falls back gracefully if spaCy not installed
@@ -225,7 +226,35 @@ def target_match(resume_id):
                                               role_id, top_n=4)
 
     return render_template("target_match.html", resume=resume, courses=courses,
-                           target=best, alternatives=alternatives)
+                           target=best, alternatives=alternatives,
+                           role_id=role_id)
+
+
+@app.route("/feedback/<int:resume_id>")
+def resume_feedback(resume_id):
+    """AI resume feedback for a chosen target role (privacy-safe, rule-based)."""
+    resume = db.get_resume(resume_id)
+    if resume is None:
+        flash("That resume was not found. Please upload again.")
+        return redirect(url_for("upload"))
+
+    role_id = request.args.get("role", type=int)
+    if role_id is None:
+        flash("Please choose a target role to get feedback.")
+        return redirect(url_for("target", resume_id=resume_id))
+
+    postings = _load_postings_with_skills()
+    target_posting = next((p for p in postings if p["id"] == role_id), None)
+    if target_posting is None:
+        flash("That role is no longer available. Please choose another.")
+        return redirect(url_for("target", resume_id=resume_id))
+
+    courses = db.get_course_map()
+    items = feedback_engine.generate_feedback(
+        resume["scrubbed_text"], resume["skills"], target_posting, courses)
+
+    return render_template("feedback.html", resume=resume,
+                           target=target_posting, items=items, role_id=role_id)
 
 
 @app.route("/dashboard")

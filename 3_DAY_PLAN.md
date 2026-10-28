@@ -77,20 +77,34 @@ Team NullForce · 5 people · Deadline **Wed 29 Oct 2026**
 ## DAY 3 — Wed 29 Oct · Polish, Validate, Rehearse (deadline today)
 
 ### P1 + P2
-- [ ] Bug fixes + edge cases (empty resume, unsupported file); freeze code
-- [ ] Final `smoke_test.py` green
+- [x] Bug fixes + edge cases (empty resume, unsupported file) handled
+- [x] Final tests green — `smoke_test`, `test_recommend`, `test_target`, `test_feedback`
+- [ ] Freeze code (stop adding features after this)
 
 ### P3
-- [ ] Finalise validation numbers → Validation slide (≥80% top-3 agreement, +20% after feedback)
-- [ ] Write one honest limitation + one failure case
+- [x] Validation numbers done → `python validation.py` : top-3 agreement 100%
+      (25/25), avg lift +20.3 pts. Written to pitch/VALIDATION_RESULTS.md
+- [x] Honest limitation + failure case written (pitch/FAILURE_CASE.md)
+- [ ] (For final pitch) swap proxy ground truth for real lecturer rankings
 
 ### P4
-- [ ] Final UI polish; test on a real phone; fix accessibility warnings
+- [ ] Final UI polish; **test on a real phone**; fix accessibility warnings
 
 ### P5
-- [ ] **Record backup demo video** (in case live demo fails)
-- [ ] Finalise deck; rehearse pitch 3× timed; prep Q&A on PII + competitors
+- [ ] **Record backup demo video** (in case live demo fails)  ← YOU do this
+- [ ] **Deploy to Render** (config ready: Procfile, runtime.txt, gunicorn)  ← YOU do this
+- [ ] Build slides from DECK_OUTLINE.md; rehearse pitch 3× timed
+- [ ] Prep Q&A on PII + competitors + validation proxy caveat
 - [ ] Last 3 hours = no code, rehearsal + submission only
+
+---
+
+## BONUS features built beyond the original plan
+- [x] Two recommendation modes: Match My Skills / Explore Preferred Field
+- [x] Target-role match + data-grounded Alternative Related Roles
+- [x] AI resume feedback (privacy-safe, rule-based) per target role
+- [x] Full course coverage (88 courses) for every gap skill
+- [x] Data grown to 49 jobs · 25 resumes · ~230 skills
 
 ---
 

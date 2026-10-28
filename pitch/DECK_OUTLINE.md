@@ -19,6 +19,10 @@ Suggested length: 8–10 slides, ~5 min pitch + Q&A.
 
 ## Slide 3 — Solution (demo-driven)
 - Upload resume → match score % → skill-gap report + free courses → AI feedback.
+- Two recommendation modes: **Match My Skills** and **Explore My Preferred Field**.
+- **Target a role**: see the single best match + **alternative related roles**
+  that fit your current skills better (motivates students who aren't ready yet).
+- **AI resume feedback** per target role (privacy-safe, runs on scrubbed text).
 - University cohort dashboard of common gaps.
 - **Show the live demo or the backup video here.**
 
@@ -41,12 +45,17 @@ Suggested length: 8–10 slides, ~5 min pitch + Q&A.
 - Bias noted; mitigated by showing the explainable skill list.
 
 ## Slide 7 — Validation  ← SCORED 4/10 (judge feedback)
-- Top-3 matches vs lecturer/mock ground truth: target ≥80% agreement.
-- Before/after: match score rises ~20% after applying feedback.
-- Honest limitation: small sample (n≈15–30), skills list not exhaustive.
+- **Real numbers (from `python validation.py`): top-3 agreement 100% (25/25),
+  average match-score lift +20.3 points after learning the gaps.** The +20
+  lands on our pitch metric.
+- Honestly labelled: ground truth is a PROXY (each resume's intended role), a
+  stand-in for lecturer judgement — the real pilot replaces it with the
+  industrial-training-unit's rankings. Say this out loud; honesty scores.
+- Honest limitation: small sample (n=25), skills list not exhaustive.
 - **Failure case we caught & fixed** → see pitch/FAILURE_CASE.md (the PII
   scrubber was deleting real skills; our test caught it; we fixed it).
   This doubles as evidence for Slide 6 (Responsible AI).
+- Full numbers + per-resume table in pitch/VALIDATION_RESULTS.md.
 
 ## Slide 8 — Impact & feasibility
 - Free for students; university licence; employer featured listings.

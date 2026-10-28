@@ -65,6 +65,10 @@
         {% endif %}
       </div>
     </div>
+
+    <hr>
+    <a href="{{ url_for('resume_feedback', resume_id=resume.id, role=tp.id) }}"
+       class="btn btn-dark">💡 Get AI resume feedback for this role</a>
   </div>
 </div>
 
