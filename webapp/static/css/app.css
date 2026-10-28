@@ -94,6 +94,7 @@ a { color: var(--ink); text-underline-offset: 3px; }
   font-family: var(--serif);
   font-weight: 500;
   font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.12;
   margin: 0 0 .3em;
 }
 .lede { font-size: 1.18rem; color: var(--ink-2); max-width: 46ch; }
@@ -305,12 +306,19 @@ table.bench td.no { color: var(--muted); }
 .two-col { display: grid; grid-template-columns: 1.6fr 1fr; gap: clamp(28px, 5vw, 56px); align-items: start; }
 
 .dropzone {
+  position: relative;
+  display: block; width: 100%;
   border: 2px dashed var(--rule); border-radius: var(--r-md);
   padding: 44px 24px; text-align: center; background: var(--card);
   transition: border-color .2s, background .2s; cursor: pointer;
 }
 .dropzone.drag { border-color: var(--gold-2); background: #f6efdc; }
-.dropzone .dz-file { font-weight: 600; margin-top: 8px; }
+.dropzone strong { display: block; font-size: 1.1rem; }
+.dropzone .dz-file { font-weight: 600; margin-top: 8px; color: var(--ink-2); }
+.dropzone input[type="file"] {
+  position: absolute; width: 1px; height: 1px;
+  opacity: 0; overflow: hidden; clip: rect(0 0 0 0);
+}
 .field-row { margin: 20px 0; }
 .field-row label { display: block; font-weight: 600; margin-bottom: 6px; }
 .field-row select, .field-row input[type="text"], textarea {
