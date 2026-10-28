@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}SiapLI — Choose how to explore{% endblock %}
+{% block content %}
+<h2 class="mb-1">Your resume is analysed</h2>
+<p class="text-muted">We detected these skills in your resume:</p>
+
+<div class="mb-4">
+  {% if resume.skills %}
+    {% for s in resume.skills %}
+      <span class="badge bg-primary me-1 mb-1">{{ s }}</span>
+    {% endfor %}
+  {% else %}
+    <span class="text-muted">No skills detected — try Option 2 to explore a field.</span>
+  {% endif %}
+</div>
+
+<p class="lead">How would you like to find internships?</p>
+
+<div class="row g-4">
+  <!-- Option 1 -->
+  <div class="col-md-6">
+    <div class="card h-100 shadow-sm border-success">
+      <div class="card-body d-flex flex-column">
+        <h5 class="card-title">Option 1 · Match My Skills</h5>
+        <p class="text-muted flex-grow-1">
+          Rank internships by how well your <strong>current skills</strong> fit.
+          See the match %, which skills matched, and what's still missing.
+        </p>
+        <a href="{{ url_for('recommend', resume_id=resume.id, mode='skills') }}"
+           class="btn btn-success">Match my skills →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Option 2 -->
+  <div class="col-md-6">
+    <div class="card h-100 shadow-sm border-primary">
+      <div class="card-body d-flex flex-column">
+        <h5 class="card-title">Option 2 · Explore My Preferred Field</h5>
+        <p class="text-muted">
+          Pick a field you're interested in. We'll recommend internships in
+          that field <strong>even if you're missing some skills</strong>, and
+          show you what to learn.
+        </p>
+        <form method="get"
+              action="{{ url_for('recommend', resume_id=resume.id) }}"
+              class="mt-auto">
+          <input type="hidden" name="mode" value="field">
+          <div class="mb-2">
+            <label for="field" class="form-label">Preferred field</label>
+            <select class="form-select" id="field" name="field" required>
+              <option value="" disabled selected>Choose a field…</option>
+              {% for key, label in fields %}
+                <option value="{{ key }}">{{ label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary">Explore field →</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<a href="{{ url_for('upload') }}" class="btn btn-outline-secondary mt-4">Try another resume</a>
+{% endblock %}

@@ -25,6 +25,7 @@ from flask import (Flask, flash, redirect, render_template,
                    request, url_for)
 
 import db
+import fields
 import matching
 import nlp  # real NLP module (P2); falls back gracefully if spaCy not installed
 
@@ -110,7 +111,8 @@ def upload():
         db.save_match(resume_id, item["posting"]["id"],
                       item["score"], item["gap"])
 
-    return redirect(url_for("results", resume_id=resume_id))
+    # New: let the student pick a recommendation option.
+    return redirect(url_for("choose", resume_id=resume_id))
 
 
 @app.route("/results/<int:resume_id>")
@@ -119,6 +121,67 @@ def results(resume_id):
     courses = db.get_course_map()  # {skill_name: course_url}
     return render_template("results.html", matches=matches,
                            resume_id=resume_id, courses=courses)
+
+
+# ---------------------------------------------------------------------------
+# New feature: two recommendation options after a resume is analysed
+# ---------------------------------------------------------------------------
+
+def _load_postings_with_skills():
+    """Load all postings with their skills parsed from JSON."""
+    import json
+    out = []
+    for p in db.get_all_postings():
+        p["skills"] = json.loads(p.get("skills_json") or "[]")
+        out.append(p)
+    return out
+
+
+@app.route("/choose/<int:resume_id>")
+def choose(resume_id):
+    """Present the two recommendation options for an analysed resume."""
+    resume = db.get_resume(resume_id)
+    if resume is None:
+        flash("That resume was not found. Please upload again.")
+        return redirect(url_for("upload"))
+    return render_template("choose.html", resume=resume,
+                           fields=fields.field_choices())
+
+
+@app.route("/recommend/<int:resume_id>")
+def recommend(resume_id):
+    """
+    Produce recommendations in one of two modes:
+      ?mode=skills                 -> Option 1 (Match My Skills)
+      ?mode=field&field=<key>      -> Option 2 (Explore My Preferred Field)
+    """
+    resume = db.get_resume(resume_id)
+    if resume is None:
+        flash("That resume was not found. Please upload again.")
+        return redirect(url_for("upload"))
+
+    mode = request.args.get("mode", "skills")
+    postings = _load_postings_with_skills()
+    courses = db.get_course_map()
+
+    if mode == "field":
+        field_key = request.args.get("field", "")
+        field = fields.get_field(field_key)
+        if field is None:
+            flash("Please choose a valid field.")
+            return redirect(url_for("choose", resume_id=resume_id))
+        recs = matching.rank_by_field(resume["skills"], postings,
+                                      field_key, top_n=5)
+        return render_template(
+            "recommend.html", mode="field", resume=resume,
+            recs=recs, courses=courses,
+            field_label=field["label"], field_skills=field["skills"])
+
+    # Default: Option 1 — Match My Skills.
+    recs = matching.rank_by_skills(resume["scrubbed_text"], resume["skills"],
+                                   postings, top_n=5)
+    return render_template("recommend.html", mode="skills", resume=resume,
+                           recs=recs, courses=courses)
 
 
 @app.route("/dashboard")

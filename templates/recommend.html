@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block title %}SiapLI — Recommendations{% endblock %}
+{% block content %}
+
+{% if mode == "field" %}
+  <h2 class="mb-1">Internships in {{ field_label }}</h2>
+  <p class="text-muted mb-3">
+    Ranked by how well each role fits <strong>{{ field_label }}</strong>, even
+    where you're missing some skills. We show what to learn to close the gap.
+  </p>
+  <div class="mb-4">
+    <span class="text-muted me-2">Core skills for this field:</span>
+    {% for s in field_skills %}
+      <span class="badge bg-light text-dark border me-1 mb-1">{{ s }}</span>
+    {% endfor %}
+  </div>
+{% else %}
+  <h2 class="mb-1">Internships that match your skills</h2>
+  <p class="text-muted mb-4">
+    Ranked by how much of each role your <strong>current skills</strong> cover.
+  </p>
+{% endif %}
+
+{% if not recs %}
+  <div class="alert alert-info">
+    {% if mode == "field" %}
+      No internships found for this field yet. Try another field or Option 1.
+    {% else %}
+      No matches yet. Seed postings with <code>python seed_data.py</code> first.
+    {% endif %}
+  </div>
+{% endif %}
+
+{% for r in recs %}
+  {% set p = r.posting %}
+  {% set pct = r.score %}
+  <div class="card mb-3 shadow-sm">
+    <div class="card-body">
+      <div class="d-flex justify-content-between align-items-start">
+        <div>
+          <h5 class="card-title mb-0">{{ p.title }}</h5>
+          <small class="text-muted">{{ p.company or "—" }} · {{ p.location or "—" }}</small>
+        </div>
+        <div class="text-end">
+          {% if mode == "field" %}
+            <span class="badge fs-6 bg-primary">{{ r.field_relevance }}% field fit</span>
+            <div class="small text-muted mt-1">{{ r.skill_coverage }}% skills covered</div>
+          {% else %}
+            <span class="badge fs-6
+              {% if pct >= 70 %}bg-success{% elif pct >= 45 %}bg-warning text-dark{% else %}bg-secondary{% endif %}">
+              {{ pct }}% match
+            </span>
+            <div class="small text-muted mt-1">{{ r.skill_coverage }}% skills covered</div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="progress mt-3" role="progressbar"
+           aria-label="Score" aria-valuenow="{{ pct }}"
+           aria-valuemin="0" aria-valuemax="100" style="height:8px;">
+        <div class="progress-bar
+          {% if mode == 'field' %}bg-primary
+          {% elif pct >= 70 %}bg-success{% elif pct >= 45 %}bg-warning{% else %}bg-secondary{% endif %}"
+          style="width: {{ pct }}%"></div>
+      </div>
+
+      <hr>
+      <div class="row">
+        <div class="col-sm-6 mb-2 mb-sm-0">
+          <strong class="text-success">Skills you have:</strong>
+          {% if r.matched %}
+            <div class="mt-2">
+              {% for s in r.matched %}
+                <span class="badge bg-success-subtle text-success border border-success me-1 mb-1">{{ s }}</span>
+              {% endfor %}
+            </div>
+          {% else %}
+            <p class="text-muted small mt-2 mb-0">None of the listed skills yet.</p>
+          {% endif %}
+        </div>
+
+        <div class="col-sm-6">
+          <strong>Skills to learn:</strong>
+          {% if r.gap %}
+            <ul class="list-unstyled mt-2 mb-0">
+              {% for s in r.gap %}
+                <li class="mb-1">
+                  <span class="badge bg-light text-dark border">{{ s }}</span>
+                  {% if courses.get(s) %}
+                    <a href="{{ courses[s] }}" target="_blank" rel="noopener"
+                       class="small ms-1">Free course →</a>
+                  {% endif %}
+                </li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <p class="text-success small mt-2 mb-0">You match all listed skills.</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endfor %}
+
+<div class="mt-3">
+  <a href="{{ url_for('choose', resume_id=resume.id) }}" class="btn btn-outline-primary">
+    ← Back to options
+  </a>
+  <a href="{{ url_for('upload') }}" class="btn btn-outline-secondary">Try another resume</a>
+</div>
+{% endblock %}

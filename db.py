@@ -134,6 +134,19 @@ def add_resume(scrubbed_text, label=None, skills=None,
     return resume_id
 
 
+def get_resume(resume_id):
+    """Return a single resume as a dict (with skills parsed), or None."""
+    conn = get_connection()
+    row = conn.execute("SELECT * FROM resumes WHERE id = ?",
+                       (resume_id,)).fetchone()
+    conn.close()
+    if row is None:
+        return None
+    r = dict(row)
+    r["skills"] = json.loads(r.get("skills_json") or "[]")
+    return r
+
+
 def save_match(resume_id, posting_id, score, gap=None):
     conn = get_connection()
     cur = conn.cursor()
