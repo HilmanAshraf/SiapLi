@@ -58,12 +58,12 @@ def main():
     assert b"test-apply" in r.data, "correct apply_url not rendered"
     print("Apply button OK — renders the real URL and opens in a new tab.")
 
-    # 4. A posting WITHOUT a url shows the unavailable message
+    # 4. A posting WITHOUT a url shows a DISABLED Apply Now button (not a link)
     role_id2 = postings["No Link Intern"]["id"]
     r = client.get(f"/target-match/{rid}?role={role_id2}")
-    assert b"Application link unavailable" in r.data, \
-        "missing 'Application link unavailable' message"
-    print("No-URL case OK — shows 'Application link unavailable'.")
+    assert b"Apply Now" in r.data, "Apply Now button should still render"
+    assert b"disabled" in r.data, "no-URL button should be disabled"
+    print("No-URL case OK — shows a disabled Apply Now button.")
 
     print("\nALL APPLY TESTS PASSED ✅")
 

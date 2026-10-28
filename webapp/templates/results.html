@@ -36,7 +36,8 @@
               {% if tp.apply_url %}
                 <a href="{{ tp.apply_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-ink btn-sm">Apply Now ↗</a>
               {% else %}
-                <span class="muted">Application link unavailable</span>
+                <button type="button" class="btn btn-ink btn-sm" disabled
+                        title="No application link available for this posting yet">Apply Now ↗</button>
               {% endif %}
             </div>
           </div>
@@ -62,7 +63,8 @@
                 {% if a.posting.apply_url %}
                   <a href="{{ a.posting.apply_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-ink btn-sm">Apply Now ↗</a>
                 {% else %}
-                  <span class="muted">Application link unavailable</span>
+                  <button type="button" class="btn btn-ink btn-sm" disabled
+                          title="No application link available for this posting yet">Apply Now ↗</button>
                 {% endif %}
               </div>
             </div>
@@ -94,7 +96,8 @@
                 {% if m.posting.apply_url %}
                   <a href="{{ m.posting.apply_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-ink btn-sm">Apply Now ↗</a>
                 {% else %}
-                  <span class="muted">Application link unavailable</span>
+                  <button type="button" class="btn btn-ink btn-sm" disabled
+                          title="No application link available for this posting yet">Apply Now ↗</button>
                 {% endif %}
               </div>
             </div>
