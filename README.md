@@ -58,3 +58,16 @@ As long as these hold, `app.py` needs no changes when P2 swaps in real NLP.
 - Raw uploads are **never persisted** — deleted right after text extraction.
 - PII (email, phone, Malaysian IC) is scrubbed before storage/any LLM call.
 - Consent checkbox is required on upload and stored per resume.
+
+## Data sourcing, copyright & privacy
+
+- **Internship listings:** the real postings (`real_internships.csv`) are public
+  internship adverts aggregated by [Prosple](https://prosple.com), used for this
+  **non-commercial student prototype**. Descriptions are paraphrased in our own
+  words (not copied verbatim). We did not scrape sites that forbid it, and we
+  never invent apply URLs. A production version would use official employer or
+  university feeds. Full notes: `pitch/DATA_SOURCING.md`.
+- **Job postings contain no personal data** — they are company adverts.
+- **Student resumes (the sensitive data):** the raw file is never stored, PII is
+  removed before any analysis, consent is required, and data can be deleted at
+  any time. This aligns with Malaysia's PDPA principles.

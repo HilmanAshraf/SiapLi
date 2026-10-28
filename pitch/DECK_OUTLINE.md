@@ -43,6 +43,14 @@ Suggested length: 8–10 slides, ~5 min pitch + Q&A.
 - Consent required and stored per resume.
 - Human-in-the-loop: scores are decision support, not gatekeeping.
 - Bias noted; mitigated by showing the explainable skill list.
+- **Data sourcing & copyright** (full notes in pitch/DATA_SOURCING.md):
+  - Internship listings are PUBLIC postings aggregated via Prosple for this
+    prototype; descriptions paraphrased in our own words (not copied verbatim).
+  - No scraping of sites that forbid it; no invented apply URLs; no homepage
+    substitutes.
+  - Honest line to say: "Listings are public postings aggregated for the
+    prototype; production would use official employer feeds."
+  - Job postings contain NO personal data — the privacy care is on the resume.
 
 ## Slide 7 — Validation  ← SCORED 4/10 (judge feedback)
 - **Real numbers (from `python validation.py`): top-3 agreement 100% (25/25),
