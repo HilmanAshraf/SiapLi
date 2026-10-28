@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Paste a job — SiapLI{% endblock %}
+{% block content %}
+<section>
+  <div class="wrap">
+    <h1 class="page-title reveal">Paste a job description</h1>
+    <p class="lede reveal">Found an internship elsewhere? Paste it in to see how
+      it matches the sample skill set.</p>
+
+    {% if error %}<div class="error-panel reveal">{{ error }}</div>{% endif %}
+
+    <div class="two-col">
+      <form method="post" action="{{ url_for('paste') }}" class="reveal">
+        <div class="field-row">
+          <label for="title">Role title (optional)</label>
+          <input type="text" id="title" name="title" placeholder="e.g. Data Analyst Intern">
+        </div>
+        <div class="field-row">
+          <label for="url">Link (optional)</label>
+          <input type="text" id="url" name="url" placeholder="https://...">
+        </div>
+        <div class="field-row">
+          <label for="jd">Job description</label>
+          <textarea id="jd" name="jd" placeholder="Paste the full job description here..." required></textarea>
+        </div>
+        <button class="btn btn-ink" type="submit">Match this job</button>
+      </form>
+
+      <aside>
+        {% if result %}
+          <div class="card stripe-{{ 'ready' if result.status == 'ready' else 'grow' }} reveal">
+            <div class="role" style="font-weight:600;font-size:1.1rem">{{ result.title }}</div>
+            {% if result.url %}<div class="company"><a href="{{ result.url }}" target="_blank" rel="noopener">{{ result.url }}</a></div>{% endif %}
+            <p class="msg">
+              {% if result.status == 'ready' %}You'd be ready for this role.
+              {% elif result.status == 'grow' %}You're close — learn a skill or two.
+              {% else %}This one needs several more skills.{% endif %}
+            </p>
+            <div class="chips" style="margin-top:10px">
+              {% for s in result.have %}<span class="chip chip-have">{{ s }}</span>{% endfor %}
+              {% for s in result.miss %}<span class="chip chip-miss">{{ s }}</span>{% endfor %}
+            </div>
+            {% if result.miss %}
+              <ul class="gap-list">
+                {% for s in result.miss %}
+                  <li><span>{{ s }}</span>
+                    <span class="muted">
+                      {% set c = result.courses.get(s) %}
+                      {% if c %}<a href="{{ c.url if c.url is defined else c }}" target="_blank" rel="noopener">free course</a>{% endif %}
+                    </span></li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+          </div>
+        {% else %}
+          <div class="panel reveal">
+            <p class="muted">Your match result will appear here.</p>
+          </div>
+        {% endif %}
+      </aside>
+    </div>
+  </div>
+</section>
+{% endblock %}

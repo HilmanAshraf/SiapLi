@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}For universities — SiapLI{% endblock %}
+{% block content %}
+<section>
+  <div class="wrap">
+    <h1 class="page-title reveal">Cohort readiness</h1>
+    <p class="lede reveal">An anonymous view of where a cohort stands. Groups
+      smaller than five students are hidden.</p>
+
+    <form method="get" action="{{ url_for('dashboard') }}" class="field-row reveal" style="max-width:320px">
+      <label for="field">Field</label>
+      <select id="field" name="field" onchange="this.form.submit()">
+        <option value="all" {{ 'selected' if selected == 'all' }}>All fields</option>
+        {% for key, label in fields %}
+          <option value="{{ key }}" {{ 'selected' if selected == key }}>{{ label }}</option>
+        {% endfor %}
+      </select>
+    </form>
+
+    <div class="stat-cards rule-grid reveal">
+      <div><div class="stat-num tnum">{{ stats.students }}</div>
+        <div class="count-label">Students analysed</div></div>
+      <div><div class="stat-num tnum">{{ stats.pct_ready }}%</div>
+        <div class="count-label">Ready for at least one role</div></div>
+      <div><div class="stat-num tnum">{{ stats.growing }}</div>
+        <div class="count-label">Close (growing)</div></div>
+    </div>
+
+    <h2 class="h2 reveal" style="margin-top:2em">Most common skill gaps</h2>
+    <div class="gap-chart reveal">
+      {% for g in stats.gaps %}
+        <div class="gc-row">
+          <span class="fb-label">{{ g.skill }}</span>
+          <div class="gc-track" title="{{ g.have }} have / {{ g.needed }} need">
+            <span class="gc-needed"></span>
+            <span class="gc-have" style="width: {{ (g.have / g.needed * 100) if g.needed else 0 }}%"></span>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <h2 class="h2 reveal" style="margin-top:2em">By field</h2>
+    <div class="table-scroll reveal">
+      <table class="bench">
+        <thead><tr><th>Field</th><th>Students</th><th>Ready</th><th>Growing</th><th>Status</th></tr></thead>
+        <tbody>
+          {% for r in stats.table %}
+            <tr>
+              <td>{{ r.field }}</td>
+              <td class="tnum">{{ r.students }}</td>
+              <td class="tnum">{{ r.ready }}</td>
+              <td class="tnum">{{ r.growing }}</td>
+              <td><span class="status-label
+                {% if r.status == 'healthy' %}st-healthy{% elif r.status == 'watch' %}st-watch{% else %}st-risk{% endif %}">
+                {{ r.status }}</span></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <p class="muted reveal" style="margin-top:1.4em">Figures are anonymised and
+      aggregated. No individual student can be identified.</p>
+  </div>
+</section>
+{% endblock %}

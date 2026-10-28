@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block title %}Your readiness — SiapLI{% endblock %}
+{% block content %}
+<section>
+  <div class="wrap">
+    <p class="summary-line reveal">You're ready for
+      {{ data.counts.ready }} internship{{ '' if data.counts.ready == 1 else 's' }},
+      and close on {{ data.counts.grow }} more.</p>
+
+    {% if data.counts.grow %}
+      <span class="moved-pill reveal">{{ data.counts.grow }} internships are within one or two skills</span>
+    {% endif %}
+
+    <div class="two-col">
+      <div>
+        <!-- READY NOW -->
+        <h2 class="group-head group-ready reveal">Ready now</h2>
+        {% if not data.ready %}
+          <p class="muted reveal">Nothing fully matched yet — see "Grow into it" for the closest roles.</p>
+        {% endif %}
+        {% for m in data.ready %}
+          <div class="match card stripe-ready reveal">
+            <div>
+              <div class="role">{{ m.posting.title }}</div>
+              <div class="company">{{ m.posting.company }}</div>
+            </div>
+            <div class="score tnum">{{ m.score }}%</div>
+            <div class="chips">
+              {% for s in m.have %}<span class="chip chip-have">{{ s }}</span>{% endfor %}
+            </div>
+            <p class="msg">You meet every required skill. Apply with confidence.</p>
+          </div>
+        {% endfor %}
+
+        <!-- GROW INTO IT -->
+        <h2 class="group-head group-grow reveal">Grow into it</h2>
+        {% if not data.grow %}
+          <p class="muted reveal">No near-misses right now.</p>
+        {% endif %}
+        {% for m in data.grow %}
+          <div class="match card stripe-grow reveal">
+            <div>
+              <div class="role">{{ m.posting.title }}</div>
+              <div class="company">{{ m.posting.company }}</div>
+            </div>
+            <div class="score tnum">{{ m.score }}%</div>
+            <div class="chips">
+              {% for s in m.have %}<span class="chip chip-have">{{ s }}</span>{% endfor %}
+              {% for s in m.miss %}<span class="chip chip-miss">{{ s }}</span>{% endfor %}
+            </div>
+            <p class="msg">Learn {{ m.miss | join(" and ") }} to be ready.</p>
+            <ul class="gap-list">
+              {% for s in m.miss %}
+                <li>
+                  <span>{{ s }}</span>
+                  <span class="muted">
+                    {% set c = data.moves | selectattr('skill','equalto',s) | first %}
+                    {% if c and c.course %}<a href="{{ c.course }}" target="_blank" rel="noopener">free course</a>{% endif %}
+                    {% if c and c.time %} · {{ c.time }}{% endif %}
+                  </span>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endfor %}
+      </div>
+
+      <!-- SIDEBAR -->
+      <aside class="side-panel">
+        <div class="panel reveal">
+          <h3 style="margin-top:0">Removed from your resume</h3>
+          <div class="chips">
+            {% for r in removed %}<span class="chip chip-have">{{ r }}</span>{% endfor %}
+          </div>
+        </div>
+
+        <details class="panel reveal">
+          <summary>Exactly what the AI received</summary>
+          <div class="prompt-block">{{ scrubbed }}{% if not scrubbed %}(text extracted from your file, with personal details removed){% endif %}</div>
+        </details>
+
+        <div class="panel reveal">
+          <h3 style="margin-top:0">Tips</h3>
+          <p class="muted">Quantify results, lead bullets with verbs like Built or
+            Led, and mirror the exact skill names from the posting.</p>
+        </div>
+
+        <div class="panel reveal">
+          <h3 style="margin-top:0">Learn next to unlock more</h3>
+          <ul class="plain">
+            {% for m in data.moves %}
+              <li>{{ m.skill }} — unlocks {{ m.unlocks }} more
+                {% if m.course %}· <a href="{{ m.course }}" target="_blank" rel="noopener">course</a>{% endif %}</li>
+            {% endfor %}
+          </ul>
+        </div>
+
+        <form method="post" action="{{ url_for('delete_data') }}">
+          <button class="btn btn-danger" type="submit">Delete my data</button>
+        </form>
+      </aside>
+    </div>
+  </div>
+</section>
+{% endblock %}

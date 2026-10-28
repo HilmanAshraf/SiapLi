@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Check my readiness — SiapLI{% endblock %}
+{% block content %}
+<section>
+  <div class="wrap">
+    <h1 class="page-title reveal">Check my readiness</h1>
+    <div class="two-col">
+      <div class="reveal">
+        {% if error %}<div class="error-panel">{{ error }}</div>{% endif %}
+
+        <form method="post" action="{{ url_for('check') }}" enctype="multipart/form-data" id="checkForm">
+          <label class="dropzone" id="dropzone" for="resume">
+            <strong>Drop your resume here</strong>
+            <div class="muted">or click to choose a file — PDF, DOCX, or TXT</div>
+            <div class="dz-file" id="dzFile" hidden></div>
+            <input type="file" id="resume" name="resume" accept=".pdf,.docx,.txt"
+                   style="position:absolute;width:1px;height:1px;opacity:0" required>
+          </label>
+
+          <div class="field-row">
+            <label for="field">Field you're aiming for (optional)</label>
+            <select id="field" name="field">
+              <option value="">Any field</option>
+              {% for key, label in fields %}
+                <option value="{{ key }}">{{ label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="consent">
+            <input type="checkbox" id="consent" name="consent" required>
+            <label for="consent">I consent to my resume being analysed. Personal
+              details (name, email, phone, ID) are removed before anything is read.</label>
+          </div>
+
+          <button type="submit" class="btn btn-ink">Analyse my resume</button>
+        </form>
+      </div>
+
+      <aside class="panel reveal">
+        <h3 class="h2" style="font-size:1.3rem">What happens</h3>
+        <ol class="muted">
+          <li>Your file is read once to get the text.</li>
+          <li>Personal details are stripped out.</li>
+          <li>We extract your skills and match real postings.</li>
+          <li>You get Ready-now and Grow-into-it groups with courses.</li>
+        </ol>
+        <p class="muted">Nothing is stored. You can delete your results anytime.</p>
+      </aside>
+    </div>
+  </div>
+</section>
+{% endblock %}

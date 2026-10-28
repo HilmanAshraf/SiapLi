@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}SiapLI{% endblock %}</title>
+  <meta name="description" content="SiapLI — know which internships you're ready for.">
+  <!-- Favicon: teal rounded square + gold check (inline SVG data URI) -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230D3B3B'/%3E%3Cpath d='M9 17l4 4 10-10' stroke='%23A99245' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="wordmark" href="{{ url_for('index') }}" aria-label="SiapLI home">
+        <span class="mark" aria-hidden="true"></span>
+        <span class="wordmark-text">SiapLI</span>
+      </a>
+      <nav class="main-nav" aria-label="Primary">
+        {% for label, href in nav_items %}
+          <a href="{{ href }}">{{ label }}</a>
+        {% endfor %}
+      </nav>
+      <a class="btn btn-ink btn-sm" href="{{ url_for('check') }}">Check my readiness</a>
+    </div>
+  </header>
+
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <div class="wrap flash-region" role="status">
+        {% for m in messages %}<p class="flash">{{ m }}</p>{% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <main id="main">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-grid">
+      <div class="footer-brand">
+        <a class="wordmark" href="{{ url_for('index') }}">
+          <span class="mark" aria-hidden="true"></span>
+          <span class="wordmark-text">SiapLI</span>
+        </a>
+        <p class="muted">A calm way to see which internships you're ready for —
+          and what to learn next.</p>
+      </div>
+      <div>
+        <h4>Product</h4>
+        <ul class="plain">
+          <li><a href="{{ url_for('check') }}">Check my readiness</a></li>
+          <li><a href="{{ url_for('paste') }}">Paste a job</a></li>
+          <li><a href="{{ url_for('dashboard') }}">For universities</a></li>
+          <li><a href="{{ url_for('privacy') }}">Privacy</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Project</h4>
+        <ul class="plain">
+          <li><a href="{{ url_for('index') }}#how">How it works</a></li>
+          <li><a href="{{ url_for('index') }}#faq">FAQ</a></li>
+          <li><a href="{{ url_for('index') }}#method">Method</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="wrap footer-note muted">
+      Sample data shown for demonstration. No real student information is stored.
+    </div>
+  </footer>
+
+  <!-- Local GSAP (bundled). A no-op shim loads first so the app never breaks
+       if the real library files aren't present; the real gsap.min.js /
+       ScrollTrigger.min.js override the shim when available. -->
+  <script src="{{ url_for('static', filename='vendor/gsap-shim.js') }}"></script>
+  <script src="{{ url_for('static', filename='vendor/gsap.min.js') }}" onerror="window.__gsapMissing=true"></script>
+  <script src="{{ url_for('static', filename='vendor/ScrollTrigger.min.js') }}" onerror="window.__stMissing=true"></script>
+  <script src="{{ url_for('static', filename='js/motion.js') }}" defer></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

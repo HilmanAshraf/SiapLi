@@ -1,0 +1,222 @@
+{% extends "base.html" %}
+{% block title %}SiapLI — know which internships you're ready for{% endblock %}
+{% block content %}
+
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <h1 class="display reveal">Know which internships<br>you're ready for.</h1>
+      <p class="lede reveal">Upload your resume. We strip the personal details,
+        read your skills, and sort real internships into the ones you can apply
+        to now — and the ones you can grow into next.</p>
+      <div class="hero-cta reveal">
+        <a class="btn btn-ink" href="{{ url_for('check') }}">Check my readiness</a>
+        <a class="btn btn-line" href="#how">See how it works</a>
+      </div>
+      <p class="hero-note reveal">No sign-up. Personal details removed before anything is read.</p>
+    </div>
+
+    <!-- Interactive readiness ledger -->
+    <aside class="ledger reveal" id="ledger"
+           data-ledger='{{ ledger | tojson_safe }}'
+           data-default="{{ default_profile }}" aria-label="Readiness ledger">
+      <div class="seg" role="tablist" aria-label="Sample student profile">
+        {% for p in ledger.profiles %}
+          <button role="tab" data-profile="{{ p.id }}"
+                  aria-selected="{{ 'true' if p.id == default_profile else 'false' }}">
+            {{ p.label }}
+          </button>
+        {% endfor %}
+      </div>
+
+      <div class="ledger-counts">
+        <div><span class="big-num tnum" data-count="ready">{{ first_paint.counts.ready }}</span>
+          <span class="count-label">Ready now</span></div>
+        <div><span class="big-num tnum" data-count="grow">{{ first_paint.counts.grow }}</span>
+          <span class="count-label">Grow into it</span></div>
+        <div><span class="big-num tnum" data-count="skills">{{ first_paint.counts.skills }}</span>
+          <span class="count-label">Skills</span></div>
+      </div>
+
+      <div class="field-bars" id="fieldBars">
+        {% for fb in first_paint.per_field %}
+          {% set total = fb.ready + fb.grow %}
+          <div class="fb-row">
+            <span class="fb-label">{{ fb.label }}</span>
+            <div class="fb-track">
+              <span class="fb-ready" style="width: {{ (fb.ready / total * 100) if total else 0 }}%"></span>
+              <span class="fb-grow" style="width: {{ (fb.grow / total * 100) if total else 0 }}%"></span>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+      <div class="moves" id="moves">
+        <h3>Learn one of these next</h3>
+        <div id="movesList">
+          {% for m in first_paint.moves %}
+            <div class="move">
+              <div class="move-main">
+                <div class="move-skill">{{ m.skill }}</div>
+                <div class="move-meta">Unlocks {{ m.unlocks }} more ·
+                  {% if m.time %}{{ m.time }}{% endif %}</div>
+              </div>
+              <button class="btn btn-gold btn-sm" data-learn="{{ m.skill }}">Mark as learned</button>
+            </div>
+          {% endfor %}
+        </div>
+        <button class="link-btn ledger-reset" id="ledgerReset">Reset</button>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<!-- EVIDENCE BAND -->
+<section class="band-ink">
+  <div class="wrap">
+    <p class="band-statement reveal">Students don't fail interviews because they
+      lack talent. They apply <mark>blind</mark>, to roles they're
+      <mark>not ready for</mark> — and find out <mark>too late</mark>.</p>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="wrap">
+    <h2 class="h2 reveal">How it works</h2>
+    <div class="steps rule-grid reveal">
+      <div class="step"><div class="step-num">1</div>
+        <h3>Upload</h3><p>Drop in your resume. PDF, DOCX, or plain text.</p></div>
+      <div class="step"><div class="step-num">2</div>
+        <h3>Redact</h3><p>Name, email, phone and ID are removed before anything is read.</p></div>
+      <div class="step"><div class="step-num">3</div>
+        <h3>Match</h3><p>We read your skills and compare them to real postings.</p></div>
+      <div class="step"><div class="step-num">4</div>
+        <h3>Plan</h3><p>See what you're ready for, and the courses to grow into more.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- OPTIONS -->
+<section class="options">
+  <div class="wrap">
+    <h2 class="h2 reveal">Two honest answers, not a wall of listings</h2>
+    <div class="options-grid">
+      <div class="ocard stripe-ready reveal">
+        <h3>Ready now</h3>
+        <p class="muted">You already have every required skill. Apply with confidence.</p>
+        <div class="chips" style="margin-top:12px">
+          <span class="chip chip-have">HTML</span>
+          <span class="chip chip-have">CSS</span>
+          <span class="chip chip-have">Git</span>
+        </div>
+      </div>
+      <div class="ocard grow stripe-grow reveal">
+        <h3>Grow into it</h3>
+        <p class="muted">Missing just one or two skills. Here's exactly what to learn.</p>
+        <div class="chips" style="margin-top:12px">
+          <span class="chip chip-have">HTML</span>
+          <span class="chip chip-have">CSS</span>
+          <span class="chip chip-miss">JavaScript</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRIVACY SPECIMEN -->
+<section id="protect">
+  <div class="wrap">
+    <h2 class="h2 reveal">Resumes are personal. We treat them that way.</h2>
+    <div class="protect-grid">
+      <div class="specimen-wrap">
+        <div class="specimen" id="specimen" aria-label="Sample resume with personal details removed">
+          <p><span class="pii" data-label="name removed">Nurul Aisyah binti Rahman</span><br>
+          <span class="pii" data-label="email removed">aisyah.rahman@example.com</span> ·
+          <span class="pii" data-label="phone removed">012-345 6789</span><br>
+          <span class="pii" data-label="ID removed">990101-14-5566</span></p>
+          <p>Final-year Computer Science student. Built web apps with HTML, CSS
+          and JavaScript. Comfortable with Git and teamwork.</p>
+          <p>Lives in <span class="pii" data-label="place removed">Kuala Lumpur</span>.
+          Portfolio: <span class="pii" data-label="link removed">aisyah.dev</span></p>
+        </div>
+      </div>
+      <div>
+        <ul class="guarantees reveal">
+          <li>Your raw file is never stored — it's read once, then discarded.</li>
+          <li>Name, email, phone, ID and links are removed before analysis.</li>
+          <li>No account, no tracking, no selling of data.</li>
+          <li>You can delete everything with one click.</li>
+          <li>Scores are guidance, not a gate — a human always decides.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BENCHMARK -->
+<section class="section-tight">
+  <div class="wrap">
+    <h2 class="h2 reveal">How we compare</h2>
+    <div class="table-scroll reveal">
+      <table class="bench">
+        <thead><tr>
+          <th>Capability</th><th>Job boards</th><th>Resume checkers</th><th>SiapLI</th>
+        </tr></thead>
+        <tbody>
+          <tr><td>Shows real internships</td><td class="yes">Yes</td><td class="no">No</td><td class="yes">Yes</td></tr>
+          <tr><td>Tells you if you're ready</td><td class="no">No</td><td class="no">No</td><td class="yes">Yes</td></tr>
+          <tr><td>Names the exact skills to learn</td><td class="no">No</td><td class="no">Partly</td><td class="yes">Yes</td></tr>
+          <tr><td>Links a free course per gap</td><td class="no">No</td><td class="no">No</td><td class="yes">Yes</td></tr>
+          <tr><td>Removes personal data first</td><td class="no">No</td><td class="no">No</td><td class="yes">Yes</td></tr>
+          <tr><td>Cohort view for universities</td><td class="no">No</td><td class="no">No</td><td class="yes">Yes</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="section-tight">
+  <div class="wrap faq">
+    <h2 class="h2 reveal">Questions</h2>
+    <div class="reveal">
+      <details><summary>Is my resume stored?<span class="plus">+</span></summary>
+        <p>No. The file is read once to extract text, then discarded. Only the
+        anonymised skills are used for matching, and you can delete them anytime.</p></details>
+      <details><summary>How do you decide "ready" vs "grow into it"?<span class="plus">+</span></summary>
+        <p>Ready means you have every skill a posting requires. Grow means you're
+        missing one or two, and already have at least half — so it's realistically close.</p></details>
+      <details><summary>Are the courses free?<span class="plus">+</span></summary>
+        <p>Yes. Every missing skill links to a free, reputable course with a rough time estimate.</p></details>
+      <details><summary>Is this only for Malaysian students?<span class="plus">+</span></summary>
+        <p>It's tuned for Malaysian internship roles and the Year 2–3 timeline, but the method is general.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BAND -->
+<section class="cta-band">
+  <div class="wrap">
+    <h2 class="h2 reveal">See where you stand in two minutes.</h2>
+    <a class="btn btn-gold reveal" href="{{ url_for('check') }}">Check my readiness</a>
+  </div>
+</section>
+
+<!-- METHOD -->
+<section id="method" class="section-tight method">
+  <div class="wrap">
+    <h2 class="h2 reveal">Method & resources</h2>
+    <ul class="reveal">
+      <li>Skills extracted with a curated dictionary and word-boundary matching.</li>
+      <li>Matching compares your skills against each posting's requirements.</li>
+      <li>Readiness rule: all skills = ready; miss ≤2 with half = grow.</li>
+      <li>Personal data removed with pattern + name detection before analysis.</li>
+      <li>Course suggestions drawn from free, reputable providers.</li>
+      <li>Cohort dashboard aggregates anonymously; small groups are hidden.</li>
+    </ul>
+  </div>
+</section>
+
+{% endblock %}
