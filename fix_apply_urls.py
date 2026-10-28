@@ -54,7 +54,8 @@ def main():
     conn = db.get_connection()
     rows = conn.execute(
         "SELECT id, title, apply_url FROM postings "
-        "WHERE apply_url LIKE '%linkedin.com/jobs/search%'").fetchall()
+        "WHERE apply_url LIKE '%linkedin.com/jobs/search%' "
+        "   OR apply_url = 'PLACEHOLDER'").fetchall()
     updated = 0
     for r in rows:
         new_url = build_url(r["title"])
@@ -71,7 +72,9 @@ def main():
             reader = list(csv.DictReader(fh))
             fields = reader[0].keys() if reader else []
         for row in reader:
-            if "apply_url" in row and "linkedin.com/jobs/search" in (row["apply_url"] or ""):
+            au = row.get("apply_url") or ""
+            if "apply_url" in row and (
+                    "linkedin.com/jobs/search" in au or au == "PLACEHOLDER"):
                 row["apply_url"] = build_url(row["title"])
         with open(CSV_PATH, "w", newline="", encoding="utf-8") as fh:
             writer = csv.DictWriter(fh, fieldnames=list(fields))

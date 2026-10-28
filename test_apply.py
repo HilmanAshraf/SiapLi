@@ -1,5 +1,5 @@
 """
-Test the Apply Now feature: apply_url column, CSV import, and that the
+Test the Find live openings feature: apply_url column, CSV import, and that the
 target-match page shows a real Apply button when a URL exists and the
 "Application link unavailable" message when it doesn't.
 """
@@ -54,16 +54,16 @@ def main():
     role_id = postings["Test Apply Intern"]["id"]
     r = client.get(f"/target-match/{rid}?role={role_id}")
     assert r.status_code == 200
-    assert b"Apply Now" in r.data, "Apply Now button missing for role with url"
+    assert b"Find live openings" in r.data, "Find live openings button missing for role with url"
     assert b"test-apply" in r.data, "correct apply_url not rendered"
     print("Apply button OK — renders the real URL and opens in a new tab.")
 
-    # 4. A posting WITHOUT a url shows a DISABLED Apply Now button (not a link)
+    # 4. A posting WITHOUT a url shows a DISABLED Find live openings button (not a link)
     role_id2 = postings["No Link Intern"]["id"]
     r = client.get(f"/target-match/{rid}?role={role_id2}")
-    assert b"Apply Now" in r.data, "Apply Now button should still render"
+    assert b"Find live openings" in r.data, "Find live openings button should still render"
     assert b"disabled" in r.data, "no-URL button should be disabled"
-    print("No-URL case OK — shows a disabled Apply Now button.")
+    print("No-URL case OK — shows a disabled Find live openings button.")
 
     print("\nALL APPLY TESTS PASSED ✅")
 
