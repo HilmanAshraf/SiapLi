@@ -410,13 +410,24 @@ def run():
     db.init_db()
 
     # --- Postings ---
+    # Load REAL internships from real_internships.csv (not synthetic data).
+    # The legacy synthetic POSTINGS list is kept in this file only for
+    # reference/history; it is no longer inserted.
+    from pathlib import Path
+    csv_path = Path(__file__).parent / "real_internships.csv"
     if db.get_all_postings():
         print("Postings already exist — skipping posting seed.")
+    elif csv_path.exists():
+        n = db.import_postings_csv(str(csv_path))
+        print(f"Seeded {n} real postings from real_internships.csv.")
+        # Broaden apply URLs to reliable field searches.
+        try:
+            import fix_apply_urls
+            fix_apply_urls.main()
+        except Exception as e:
+            print(f"(apply-url broadening skipped: {e})")
     else:
-        for title, company, loc, desc, skills in POSTINGS:
-            db.add_posting(title=title, company=company, location=loc,
-                           description=desc, skills=skills)
-        print(f"Seeded {len(POSTINGS)} postings.")
+        print("real_internships.csv not found — no postings seeded.")
 
     # --- Skills + course mapping ---
     conn = db.get_connection()

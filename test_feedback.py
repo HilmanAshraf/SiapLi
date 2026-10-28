@@ -21,11 +21,13 @@ def main():
     seed_data.run()
     postings = _postings()
 
-    swe = next(p for p in postings if p["title"] == "Software Engineering Intern")
+    # Front End Engineer role requires React (a real posting), so a resume
+    # without React has a React gap.
+    swe = next(p for p in postings if p["title"] == "Front End Engineer Intern")
 
-    # Resume missing some SWE skills, with no numbers and weak verbs.
-    text = "Student interested in Python and SQL. Knows Git."
-    skills = ["Python", "SQL", "Git"]
+    # Resume with HTML/CSS/Git but missing React, no numbers, weak verbs.
+    text = "Student interested in HTML and CSS. Knows Git."
+    skills = ["HTML", "CSS", "Git"]
     items = fb.generate_feedback(text, skills, swe, course_map={
         "React": "https://react.dev/learn"})
 
