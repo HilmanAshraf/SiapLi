@@ -47,6 +47,30 @@ SKILLS = [
     "Communication", "Teamwork", "Leadership", "Problem Solving",
     "Critical Thinking", "Time Management", "Adaptability", "Creativity",
     "Presentation", "Public Speaking", "Collaboration", "Attention to Detail",
+    # --- More programming / web ---
+    "Spring", "Flask-RESTful", "Svelte", "Deno", "WebSockets", "Web Development",
+    # --- More data / ML / AI ---
+    "Data Engineering", "ETL", "Data Mining", "Jupyter", "OpenCV",
+    "Hugging Face", "Prompt Engineering", "Reinforcement Learning",
+    "Time Series Analysis", "A/B Testing", "SciPy", "Seaborn",
+    # --- More cloud / devops ---
+    "Google Cloud Platform", "DigitalOcean", "Heroku", "Grafana",
+    "Prometheus", "Helm", "Serverless", "Microservices", "Load Balancing",
+    # --- More databases ---
+    "NoSQL", "Elasticsearch", "MariaDB", "DynamoDB", "Database Design",
+    # --- More security / networking ---
+    "SIEM", "Incident Response", "Firewall", "VPN", "OWASP",
+    "Ethical Hacking", "Vulnerability Assessment", "Security Auditing",
+    # --- More tools / practices ---
+    "VS Code", "Confluence", "Trello", "Notion", "CI", "Code Review",
+    "Test-Driven Development", "Debugging", "Technical Writing",
+    # --- More business / domain ---
+    "Market Research", "Copywriting", "Social Media Marketing",
+    "Email Marketing", "Google Analytics", "CRM", "Customer Service",
+    "Data Entry", "Microsoft Office", "PowerPoint", "Canva",
+    # --- More soft skills ---
+    "Analytical Thinking", "Decision Making", "Negotiation", "Mentoring",
+    "Conflict Resolution", "Organization", "Self-Motivation", "Multitasking",
 ]
 
 SKILL_ALIASES = {
@@ -76,4 +100,17 @@ SKILL_ALIASES = {
     "Power BI": ["powerbi"],
     "Data Visualization": ["data viz", "dataviz"],
     "Unit Testing": ["unit tests", "pytest", "junit"],
+    "Google Cloud Platform": ["gcp"],
+    "Test-Driven Development": ["tdd"],
+    "Google Analytics": ["ga4", "google analytics 4"],
+    "Microsoft Office": ["ms office", "office suite"],
+    "PowerPoint": ["ms powerpoint", "powerpoint"],
+    "OpenCV": ["open cv"],
+    "Hugging Face": ["huggingface"],
+    "Reinforcement Learning": ["rl"],
+    "Social Media Marketing": ["smm"],
+    "Ethical Hacking": ["white hat", "white-hat hacking"],
+    "Incident Response": ["ir"],
+    "Web Development": ["web dev"],
+    "Data Engineering": ["data pipelines"],
 }

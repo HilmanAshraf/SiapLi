@@ -71,8 +71,6 @@ def upload():
         flash("Unsupported file type. Use PDF, DOCX, or TXT.")
         return redirect(url_for("upload"))
 
-    target_role = request.form.get("target_role", "").strip()
-
     # Save to a temp file, extract, then discard the raw file (no raw PII kept).
     with tempfile.NamedTemporaryFile(delete=False, suffix=ext) as tmp:
         file.save(tmp.name)
@@ -95,7 +93,6 @@ def upload():
     resume_id = db.add_resume(
         scrubbed_text=scrubbed,
         skills=resume_skills,
-        target_role=target_role or None,
         consent=1,
     )
 
