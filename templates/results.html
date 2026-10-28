@@ -1,36 +1,59 @@
 {% extends "base.html" %}
 {% block title %}SiapLI — Your matches{% endblock %}
 {% block content %}
-<h2 class="mb-4">Your top internship matches</h2>
+<h2 class="mb-1">Your top internship matches</h2>
+<p class="text-muted mb-4">Ranked by how well your resume fits each role.</p>
 
 {% if not matches %}
-  <p class="text-muted">No matches yet. Make sure postings are seeded.</p>
+  <div class="alert alert-info">
+    No matches yet. Seed postings with <code>python seed_data.py</code> first.
+  </div>
 {% endif %}
 
 {% for m in matches %}
   {% set gap = m.gap_json | fromjson %}
-  <div class="card mb-3">
+  {% set pct = m.score %}
+  <div class="card mb-3 shadow-sm">
     <div class="card-body">
       <div class="d-flex justify-content-between align-items-start">
         <div>
           <h5 class="card-title mb-0">{{ m.title }}</h5>
           <small class="text-muted">{{ m.company or "—" }} · {{ m.location or "—" }}</small>
         </div>
-        <span class="badge bg-success fs-6">{{ m.score }}%</span>
+        <span class="badge fs-6
+          {% if pct >= 70 %}bg-success{% elif pct >= 45 %}bg-warning text-dark{% else %}bg-secondary{% endif %}">
+          {{ pct }}% match
+        </span>
+      </div>
+
+      <div class="progress mt-3" role="progressbar"
+           aria-label="Match score" aria-valuenow="{{ pct }}"
+           aria-valuemin="0" aria-valuemax="100" style="height:8px;">
+        <div class="progress-bar
+          {% if pct >= 70 %}bg-success{% elif pct >= 45 %}bg-warning{% else %}bg-secondary{% endif %}"
+          style="width: {{ pct }}%"></div>
       </div>
 
       <hr>
       <strong>Skills to improve:</strong>
       {% if gap %}
-        <ul class="mt-2">
-          {% for skill in gap %}<li>{{ skill }}</li>{% endfor %}
+        <ul class="list-unstyled mt-2 mb-0">
+          {% for skill in gap %}
+            <li class="mb-1">
+              <span class="badge bg-light text-dark border">{{ skill }}</span>
+              {% if courses.get(skill) %}
+                <a href="{{ courses[skill] }}" target="_blank" rel="noopener"
+                   class="small ms-1">Free course →</a>
+              {% endif %}
+            </li>
+          {% endfor %}
         </ul>
       {% else %}
-        <p class="text-success mt-2">You match all listed skills. Nice.</p>
+        <p class="text-success mt-2 mb-0">You match all listed skills. Nice.</p>
       {% endif %}
     </div>
   </div>
 {% endfor %}
 
-<a href="{{ url_for('upload') }}" class="btn btn-outline-primary">Try another resume</a>
+<a href="{{ url_for('upload') }}" class="btn btn-outline-primary mt-2">Try another resume</a>
 {% endblock %}

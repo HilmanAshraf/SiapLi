@@ -4,21 +4,38 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}SiapLI{% endblock %}</title>
-  <!-- Bootstrap 5 via CDN (P4 may replace) -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    :root { --siapli: #4b2ec9; }
+    .navbar-brand { letter-spacing: .5px; }
+    .bg-siapli { background: linear-gradient(90deg, #4b2ec9, #c92e6a); }
+    .hero { background: linear-gradient(135deg, #4b2ec9 0%, #c92e6a 100%); color:#fff; border-radius: 1rem; }
+    .score-ring { font-weight:700; }
+    footer { font-size:.85rem; }
+    a.skip-link { position:absolute; left:-999px; }
+    a.skip-link:focus { left:1rem; top:1rem; background:#fff; padding:.5rem 1rem; z-index:1080; border-radius:.5rem; }
+  </style>
 </head>
 <body>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <a href="#main" class="skip-link">Skip to content</a>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-siapli">
     <div class="container">
       <a class="navbar-brand fw-bold" href="{{ url_for('index') }}">SiapLI</a>
-      <div class="navbar-nav">
-        <a class="nav-link" href="{{ url_for('upload') }}">Upload</a>
-        <a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+              data-bs-target="#nav" aria-controls="nav" aria-expanded="false"
+              aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="nav">
+        <div class="navbar-nav ms-auto">
+          <a class="nav-link" href="{{ url_for('upload') }}">Upload</a>
+          <a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a>
+        </div>
       </div>
     </div>
   </nav>
 
-  <main class="container py-4">
+  <main id="main" class="container py-4">
     {% with messages = get_flashed_messages() %}
       {% if messages %}
         {% for m in messages %}
@@ -30,7 +47,9 @@
   </main>
 
   <footer class="container text-muted py-4 border-top">
-    <small>SiapLI — AI Internship Readiness &amp; Matching · Team NullForce</small>
+    SiapLI — AI Internship Readiness &amp; Matching · Team NullForce
   </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

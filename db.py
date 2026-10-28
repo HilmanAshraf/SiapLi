@@ -168,6 +168,16 @@ def get_top_matches(resume_id, limit=3):
     return [dict(r) for r in rows]
 
 
+def get_course_map():
+    """Return {skill_name: course_url} for the skill-gap report links."""
+    conn = get_connection()
+    rows = conn.execute(
+        "SELECT name, course_url FROM skills WHERE course_url IS NOT NULL"
+    ).fetchall()
+    conn.close()
+    return {r["name"]: r["course_url"] for r in rows}
+
+
 def cohort_skill_gaps(top_n=10):
     """Aggregate missing skills across all match_results for the dashboard."""
     conn = get_connection()

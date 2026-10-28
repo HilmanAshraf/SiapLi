@@ -39,7 +39,18 @@ def main():
                     follow_redirects=True)
     assert r.status_code == 200, "upload POST failed"
     assert b"%" in r.data, "no match score shown"
-    print("Results page OK — match scores rendered.")
+    assert b"Free course" in r.data, "no course links on results"
+    print("Results page OK — match scores + course links rendered.")
+
+    # 3b. Skill extraction picked up real skills from the resume
+    conn = db.get_connection()
+    import json as _json
+    row = conn.execute("SELECT skills_json FROM resumes "
+                       "ORDER BY id DESC LIMIT 1").fetchone()
+    skills = _json.loads(row["skills_json"])
+    conn.close()
+    assert "Python" in skills and "Flask" in skills, f"skills off: {skills}"
+    print(f"Skill extraction OK — found {skills}")
 
     # 4. Confirm PII was scrubbed in storage
     conn = db.get_connection()

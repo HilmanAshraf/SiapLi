@@ -26,7 +26,7 @@ from flask import (Flask, flash, redirect, render_template,
 
 import db
 import matching
-import nlp_stub as nlp  # P2 will swap this for the real module
+import nlp  # real NLP module (P2); falls back gracefully if spaCy not installed
 
 app = Flask(__name__)
 app.secret_key = "siapli-dev-key-change-me"  # dev only
@@ -115,8 +115,9 @@ def upload():
 @app.route("/results/<int:resume_id>")
 def results(resume_id):
     matches = db.get_top_matches(resume_id, limit=3)
+    courses = db.get_course_map()  # {skill_name: course_url}
     return render_template("results.html", matches=matches,
-                           resume_id=resume_id)
+                           resume_id=resume_id, courses=courses)
 
 
 @app.route("/dashboard")
@@ -129,4 +130,6 @@ def dashboard():
 
 if __name__ == "__main__":
     db.init_db()  # ensure tables exist on startup
-    app.run(debug=True, port=5000)
+    port = int(os.environ.get("PORT", 5000))
+    debug = os.environ.get("FLASK_DEBUG", "1") == "1"
+    app.run(debug=debug, host="0.0.0.0", port=port)

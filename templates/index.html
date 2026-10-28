@@ -1,29 +1,41 @@
 {% extends "base.html" %}
 {% block title %}SiapLI — Home{% endblock %}
 {% block content %}
-<div class="text-center py-5">
+<section class="hero p-5 mb-5 text-center">
   <h1 class="display-5 fw-bold">Are you ready for your internship?</h1>
   <p class="lead col-lg-8 mx-auto">
     Upload your resume and get a match score against real internships,
-    a skill-gap report with free courses, and AI feedback to improve.
+    a skill-gap report with free courses, and feedback to improve.
   </p>
-  <a href="{{ url_for('upload') }}" class="btn btn-primary btn-lg mt-3">
+  <a href="{{ url_for('upload') }}" class="btn btn-light btn-lg mt-3 fw-semibold">
     Upload my resume
   </a>
-</div>
+</section>
 
-<div class="row text-center mt-4">
+<div class="row text-center g-4">
   <div class="col-md-4">
-    <h5>Match score</h5>
-    <p class="text-muted">See how well you fit each internship.</p>
+    <div class="card h-100 border-0 shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">Match score</h5>
+        <p class="text-muted mb-0">See how well you fit each internship, with the why.</p>
+      </div>
+    </div>
   </div>
   <div class="col-md-4">
-    <h5>Skill-gap report</h5>
-    <p class="text-muted">Know exactly what to learn next.</p>
+    <div class="card h-100 border-0 shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">Skill-gap report</h5>
+        <p class="text-muted mb-0">Know exactly what to learn next — with free courses.</p>
+      </div>
+    </div>
   </div>
   <div class="col-md-4">
-    <h5>Privacy first</h5>
-    <p class="text-muted">We remove personal info before any AI processing.</p>
+    <div class="card h-100 border-0 shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">Privacy first</h5>
+        <p class="text-muted mb-0">We remove personal info before any AI processing.</p>
+      </div>
+    </div>
   </div>
 </div>
 {% endblock %}
