@@ -1,11 +1,15 @@
 # SiapLI — Editorial web app
 
-A self-contained, multi-page Flask app: cream paper / deep teal ink / olive-gold.
-Server-rendered Jinja2, vanilla CSS, vanilla JS + GSAP/ScrollTrigger. Works fully
-offline and degrades gracefully with no JS, no GSAP, or reduced motion.
+A multi-page Flask app: cream paper / deep teal ink / olive-gold. Server-rendered
+Jinja2, vanilla CSS, vanilla JS + GSAP/ScrollTrigger. Works fully offline and
+degrades gracefully with no JS, no GSAP, or reduced motion.
 
-This is a separate app from the main SiapLI prototype in the repo root — it does
-not touch or depend on it.
+This is the EDITORIAL FRONTEND over the REAL SiapLI engine. It imports the
+root modules (`nlp.py`, `matching.py`, `feedback.py`, `db.py`, `seed_data.py`),
+so resume analysis uses the actual spaCy skill extraction + PII scrubbing, the
+real internship database, and the original results logic (target-role match,
+alternative related roles, AI feedback). The hero ledger stays a lightweight
+in-browser demo (see `ledger_data.py`).
 
 ## Run
 

@@ -28,12 +28,13 @@
 
       <aside>
         {% if result %}
-          <div class="card stripe-{{ 'ready' if result.status == 'ready' else 'grow' }} reveal">
+          <div class="card stripe-{{ 'ready' if result.coverage >= 70 else 'grow' }} reveal">
             <div class="role" style="font-weight:600;font-size:1.1rem">{{ result.title }}</div>
             {% if result.url %}<div class="company"><a href="{{ result.url }}" target="_blank" rel="noopener">{{ result.url }}</a></div>{% endif %}
+            <div class="score tnum" style="margin:8px 0">{{ result.coverage }}% skills covered</div>
             <p class="msg">
-              {% if result.status == 'ready' %}You'd be ready for this role.
-              {% elif result.status == 'grow' %}You're close — learn a skill or two.
+              {% if result.coverage >= 70 %}You'd be ready for this role.
+              {% elif result.coverage >= 40 %}You're close — learn a skill or two.
               {% else %}This one needs several more skills.{% endif %}
             </p>
             <div class="chips" style="margin-top:10px">
@@ -45,8 +46,7 @@
                 {% for s in result.miss %}
                   <li><span>{{ s }}</span>
                     <span class="muted">
-                      {% set c = result.courses.get(s) %}
-                      {% if c %}<a href="{{ c.url if c.url is defined else c }}" target="_blank" rel="noopener">free course</a>{% endif %}
+                      {% if result.courses.get(s) %}<a href="{{ result.courses[s] }}" target="_blank" rel="noopener">free course</a>{% endif %}
                     </span></li>
                 {% endfor %}
               </ul>

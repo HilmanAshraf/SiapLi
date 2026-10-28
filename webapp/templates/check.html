@@ -17,11 +17,11 @@
           </label>
 
           <div class="field-row">
-            <label for="field">Field you're aiming for (optional)</label>
-            <select id="field" name="field">
-              <option value="">Any field</option>
-              {% for key, label in fields %}
-                <option value="{{ key }}">{{ label }}</option>
+            <label for="role">Target role (optional — unlocks alternatives + AI feedback)</label>
+            <select id="role" name="role">
+              <option value="">No specific target — just match my skills</option>
+              {% for r in roles %}
+                <option value="{{ r.id }}">{{ r.title }}</option>
               {% endfor %}
             </select>
           </div>
