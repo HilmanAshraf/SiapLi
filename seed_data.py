@@ -213,8 +213,8 @@ def run():
         postings.append(p)
 
     for label, role, text in SAMPLE_RESUMES:
+        skills = nlp.extract_skills(text)   # skills are not PII
         scrubbed = nlp.scrub_pii(text)
-        skills = nlp.extract_skills(scrubbed)
         rid = db.add_resume(scrubbed_text=scrubbed, label=label,
                             skills=skills, target_role=role, consent=1)
         ranked = matching.rank_postings(scrubbed, skills, postings, top_n=5)

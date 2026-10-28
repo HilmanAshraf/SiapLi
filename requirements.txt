@@ -1,6 +1,11 @@
+# SiapLI dependencies — pinned for Python 3.9 compatibility.
+# If you are on Python 3.10+, you may use newer spaCy; these versions also work.
 Flask==3.0.3
-pdfplumber==0.11.4
-python-docx==1.1.2
-spacy==3.7.6
-sentence-transformers==3.0.1
-gunicorn==22.0.0
+pdfplumber==0.11.8
+python-docx==1.2.0
+spacy>=3.7,<3.8
+sentence-transformers
+gunicorn==23.0.0
+
+# spaCy English model (needed for NER-based PII scrubbing + skill extraction):
+#   python -m spacy download en_core_web_sm

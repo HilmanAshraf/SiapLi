@@ -11,7 +11,10 @@ source venv/bin/activate          # Windows: venv\Scripts\activate
 
 # 2. Install dependencies
 pip install -r requirements.txt
-python -m spacy download en_core_web_sm   # only needed once P2's NLP is wired in
+python -m spacy download en_core_web_sm   # NER model for PII scrubbing + skills
+
+# Note: on Python 3.9, requirements.txt pins spaCy 3.7 (newer spaCy needs 3.10+).
+# The app still runs without the ML libs — it falls back to keyword matching.
 
 # 3. Set up the database + sample data
 python db.py          # create tables

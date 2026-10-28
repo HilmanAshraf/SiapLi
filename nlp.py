@@ -136,7 +136,7 @@ def _term_in(term: str, text: str) -> bool:
 # ---------------------------------------------------------------------------
 _EMAIL_RE = re.compile(r"[\w.+-]+@[\w-]+\.[\w.-]+")
 _IC_RE = re.compile(r"\b\d{6}-\d{2}-\d{4}\b")              # Malaysian IC
-_PHONE_RE = re.compile(r"\b(?:\+?60|0)\d{1,2}-?\d{7,8}\b")  # MY phone
+_PHONE_RE = re.compile(r"\+?(?:60|0)\d{1,2}-?\d{7,8}\b")  # MY phone
 _URL_RE = re.compile(r"https?://\S+")
 
 
@@ -154,9 +154,29 @@ def scrub_pii(text: str) -> str:
     if model is not None:
         doc = model(text)
         # Replace named people and places (right-to-left to keep spans valid).
+        # IMPORTANT: never scrub a span that is actually a known skill — the
+        # NER model sometimes tags tech terms (e.g. "Python", "Flask") as GPE.
         for ent in reversed(doc.ents):
+            if _is_known_skill(ent.text):
+                continue
             if ent.label_ == "PERSON":
                 text = text[:ent.start_char] + "[NAME]" + text[ent.end_char:]
             elif ent.label_ == "GPE":
                 text = text[:ent.start_char] + "[PLACE]" + text[ent.end_char:]
     return text
+
+
+def _is_known_skill(term: str) -> bool:
+    """True if `term` matches a canonical skill or any alias (case-insensitive)."""
+    t = term.strip().lower()
+    if t in _KNOWN_SKILL_TERMS:
+        return True
+    return False
+
+
+# Pre-compute a lowercase set of every skill + alias for fast lookup.
+_KNOWN_SKILL_TERMS = set()
+for _skill in SKILLS:
+    _KNOWN_SKILL_TERMS.add(_skill.lower())
+    for _alias in SKILL_ALIASES.get(_skill, []):
+        _KNOWN_SKILL_TERMS.add(_alias.lower())

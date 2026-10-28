@@ -86,9 +86,10 @@ def upload():
         flash("Could not read any text from that file.")
         return redirect(url_for("upload"))
 
+    # Extract skills from the original text (skills are not PII).
+    resume_skills = nlp.extract_skills(raw_text)
     # Responsible-AI: scrub PII BEFORE storing or any external call.
     scrubbed = nlp.scrub_pii(raw_text)
-    resume_skills = nlp.extract_skills(scrubbed)
 
     resume_id = db.add_resume(
         scrubbed_text=scrubbed,
