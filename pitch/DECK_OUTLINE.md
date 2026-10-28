@@ -44,7 +44,9 @@ Suggested length: 8–10 slides, ~5 min pitch + Q&A.
 - Top-3 matches vs lecturer/mock ground truth: target ≥80% agreement.
 - Before/after: match score rises ~20% after applying feedback.
 - Honest limitation: small sample (n≈15–30), skills list not exhaustive.
-- Include one failure case + why.
+- **Failure case we caught & fixed** → see pitch/FAILURE_CASE.md (the PII
+  scrubber was deleting real skills; our test caught it; we fixed it).
+  This doubles as evidence for Slide 6 (Responsible AI).
 
 ## Slide 8 — Impact & feasibility
 - Free for students; university licence; employer featured listings.
