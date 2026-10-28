@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+{% block title %}SiapLI — Target role match{% endblock %}
+{% block content %}
+
+{% set tp = target.posting %}
+
+<!-- ================= OPTION 1: Exact Target Role Match ================= -->
+<h2 class="mb-1">Option 1 · Your target role</h2>
+<p class="text-muted mb-3">The single best-matching position for your target role.</p>
+
+<div class="card mb-4 shadow-sm border-dark">
+  <div class="card-body">
+    <div class="d-flex justify-content-between align-items-start">
+      <div>
+        <h5 class="card-title mb-0">{{ tp.title }}</h5>
+        <small class="text-muted">{{ tp.company or "—" }} · {{ tp.location or "—" }}</small>
+      </div>
+      <span class="badge fs-6
+        {% if target.score >= 70 %}bg-success{% elif target.score >= 45 %}bg-warning text-dark{% else %}bg-secondary{% endif %}">
+        {{ target.score }}% match
+      </span>
+    </div>
+
+    <div class="progress mt-3" role="progressbar"
+         aria-label="Match score" aria-valuenow="{{ target.score }}"
+         aria-valuemin="0" aria-valuemax="100" style="height:8px;">
+      <div class="progress-bar
+        {% if target.score >= 70 %}bg-success{% elif target.score >= 45 %}bg-warning{% else %}bg-secondary{% endif %}"
+        style="width: {{ target.score }}%"></div>
+    </div>
+
+    <hr>
+    <div class="row">
+      <div class="col-sm-6 mb-2 mb-sm-0">
+        <strong class="text-success">Skills you have:</strong>
+        {% if target.matched %}
+          <div class="mt-2">
+            {% for s in target.matched %}
+              <span class="badge bg-success-subtle text-success border border-success me-1 mb-1">{{ s }}</span>
+            {% endfor %}
+          </div>
+        {% else %}
+          <p class="text-muted small mt-2 mb-0">None of the required skills yet.</p>
+        {% endif %}
+      </div>
+
+      <div class="col-sm-6">
+        <strong>Missing skills & free courses:</strong>
+        {% if target.gap %}
+          <ul class="list-unstyled mt-2 mb-0">
+            {% for s in target.gap %}
+              <li class="mb-1">
+                <span class="badge bg-light text-dark border">{{ s }}</span>
+                {% if courses.get(s) %}
+                  <a href="{{ courses[s] }}" target="_blank" rel="noopener"
+                     class="small ms-1">Free course →</a>
+                {% else %}
+                  <span class="small text-muted ms-1">(no course link on file)</span>
+                {% endif %}
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p class="text-success small mt-2 mb-0">You meet all required skills for this role.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= OPTION 2: Alternative Related Roles ================= -->
+<h2 class="mb-1">Option 2 · Alternative related roles</h2>
+<p class="text-muted mb-3">
+  Roles related to <strong>{{ tp.title }}</strong> that fit your current skills
+  better and don't require the skills you're still missing for the target.
+</p>
+
+{% if not alternatives %}
+  <div class="alert alert-info">
+    We couldn't find a related role that fits your current skills better than
+    your target. Focus on the free courses above to work towards
+    <strong>{{ tp.title }}</strong>.
+  </div>
+{% endif %}
+
+{% for a in alternatives %}
+  {% set ap = a.posting %}
+  <div class="card mb-3 shadow-sm">
+    <div class="card-body">
+      <div class="d-flex justify-content-between align-items-start">
+        <div>
+          <h5 class="card-title mb-0">{{ ap.title }}</h5>
+          <small class="text-muted">{{ ap.company or "—" }} · {{ ap.location or "—" }}</small>
+        </div>
+        <span class="badge fs-6
+          {% if a.score >= 70 %}bg-success{% elif a.score >= 45 %}bg-warning text-dark{% else %}bg-secondary{% endif %}">
+          {{ a.score }}% match
+        </span>
+      </div>
+
+      <div class="progress mt-3" role="progressbar"
+           aria-label="Match score" aria-valuenow="{{ a.score }}"
+           aria-valuemin="0" aria-valuemax="100" style="height:8px;">
+        <div class="progress-bar
+          {% if a.score >= 70 %}bg-success{% elif a.score >= 45 %}bg-warning{% else %}bg-secondary{% endif %}"
+          style="width: {{ a.score }}%"></div>
+      </div>
+
+      <div class="alert alert-light border mt-3 mb-3 small">
+        <strong>Why it's related:</strong>
+        shares {{ a.relatedness }} skill{{ '' if a.relatedness == 1 else 's' }}
+        with {{ tp.title }} ({{ a.shared_with_target | join(", ") }}),
+        and doesn't require the skills you're missing for your target.
+      </div>
+
+      <div class="row">
+        <div class="col-sm-6 mb-2 mb-sm-0">
+          <strong class="text-success">Skills you have:</strong>
+          {% if a.matched %}
+            <div class="mt-2">
+              {% for s in a.matched %}
+                <span class="badge bg-success-subtle text-success border border-success me-1 mb-1">{{ s }}</span>
+              {% endfor %}
+            </div>
+          {% else %}
+            <p class="text-muted small mt-2 mb-0">None of the required skills yet.</p>
+          {% endif %}
+        </div>
+
+        <div class="col-sm-6">
+          <strong>Remaining skill gaps:</strong>
+          {% if a.gap %}
+            <ul class="list-unstyled mt-2 mb-0">
+              {% for s in a.gap %}
+                <li class="mb-1">
+                  <span class="badge bg-light text-dark border">{{ s }}</span>
+                  {% if courses.get(s) %}
+                    <a href="{{ courses[s] }}" target="_blank" rel="noopener"
+                       class="small ms-1">Free course →</a>
+                  {% endif %}
+                </li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <p class="text-success small mt-2 mb-0">You meet all required skills for this role.</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endfor %}
+
+<div class="mt-3">
+  <a href="{{ url_for('target', resume_id=resume.id) }}" class="btn btn-outline-dark">
+    ← Choose a different target
+  </a>
+  <a href="{{ url_for('choose', resume_id=resume.id) }}" class="btn btn-outline-secondary">
+    All options
+  </a>
+</div>
+{% endblock %}

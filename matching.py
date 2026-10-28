@@ -147,3 +147,97 @@ def rank_by_field(resume_skills, postings, field_key, top_n=5):
 
     results.sort(key=lambda x: (x["field_relevance"], x["score"]), reverse=True)
     return results[:top_n]
+
+
+# ---------------------------------------------------------------------------
+# New feature: Target-role recommendations
+#   Option 1 — Exact Target Role Match (single best posting for the role)
+#   Option 2 — Alternative Related Roles (data-grounded alternatives)
+# All logic below uses ONLY the skills stored on each posting. It never invents
+# vacancies, courses, or requirements.
+# ---------------------------------------------------------------------------
+
+def evaluate_posting(resume_skills, posting):
+    """
+    Compute the skill picture for one posting against the student's skills.
+    Returns {posting, matched, gap, skill_coverage, score}.
+    `score` here is the % of the role's required skills the student already has.
+    """
+    required = posting.get("skills", [])
+    matched = matched_skills(resume_skills, required)
+    gap = skill_gap(resume_skills, required)
+    coverage = (len(matched) / len(required) * 100) if required else 0.0
+    return {
+        "posting": posting,
+        "matched": matched,
+        "gap": gap,
+        "skill_coverage": round(coverage, 1),
+        "score": round(coverage, 1),
+    }
+
+
+def exact_target_match(resume_skills, postings, target_id):
+    """
+    OPTION 1 — Exact Target Role Match.
+    Return the single posting whose id == target_id, with matched/missing
+    skills, or None if that posting no longer exists.
+    """
+    for p in postings:
+        if p.get("id") == target_id:
+            return evaluate_posting(resume_skills, p)
+    return None
+
+
+def alternative_roles(resume_skills, postings, target_id, top_n=4,
+                      min_relatedness=1):
+    """
+    OPTION 2 — Alternative Related Roles.
+
+    An alternative is a DIFFERENT posting that:
+      1. is RELATED to the target role — it shares at least `min_relatedness`
+         required skills with the target role (verified from the listings), and
+      2. does NOT make the student's target-role skill GAPS mandatory — none of
+         the skills the student is missing for the target are required here, and
+      3. FITS the student better — the student covers a higher share of this
+         role's required skills than they do of the target role.
+
+    Returns a list of dicts, best fit first:
+        {posting, matched, gap, skill_coverage, shared_with_target,
+         relatedness, avoids_target_gaps}
+    """
+    target = next((p for p in postings if p.get("id") == target_id), None)
+    if target is None:
+        return []
+
+    target_required = set(target.get("skills", []))
+    target_gap = set(skill_gap(resume_skills, target.get("skills", [])))
+
+    alternatives = []
+    for p in postings:
+        if p.get("id") == target_id:
+            continue  # skip the target itself
+
+        required = set(p.get("skills", []))
+        shared = sorted(required & target_required)      # relatedness evidence
+        if len(shared) < min_relatedness:
+            continue  # not related enough to the target role
+
+        # Must NOT require the exact skills blocking the student in the target.
+        if required & target_gap:
+            continue
+
+        info = evaluate_posting(resume_skills, p)
+        target_coverage = (len(target_required - target_gap)
+                           / len(target_required) * 100) if target_required else 0.0
+        if info["skill_coverage"] <= target_coverage:
+            continue  # not a better fit than the target itself
+
+        info["shared_with_target"] = shared
+        info["relatedness"] = len(shared)
+        info["avoids_target_gaps"] = sorted(target_gap)
+        alternatives.append(info)
+
+    # Best fit first; then most related to the target.
+    alternatives.sort(key=lambda x: (x["skill_coverage"], x["relatedness"]),
+                      reverse=True)
+    return alternatives[:top_n]

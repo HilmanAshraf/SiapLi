@@ -184,6 +184,53 @@ def recommend(resume_id):
                            recs=recs, courses=courses)
 
 
+# ---------------------------------------------------------------------------
+# New feature: Target-role recommendations
+#   Option 1 — Exact Target Role Match
+#   Option 2 — Alternative Related Roles
+# ---------------------------------------------------------------------------
+
+@app.route("/target/<int:resume_id>")
+def target(resume_id):
+    """Let the student pick a target role from the real internship listings."""
+    resume = db.get_resume(resume_id)
+    if resume is None:
+        flash("That resume was not found. Please upload again.")
+        return redirect(url_for("upload"))
+
+    roles = [{"id": p["id"], "title": p["title"], "company": p["company"]}
+             for p in db.get_all_postings()]
+    return render_template("target.html", resume=resume, roles=roles)
+
+
+@app.route("/target-match/<int:resume_id>")
+def target_match(resume_id):
+    """Show Option 1 (exact target) and Option 2 (alternatives) for a role."""
+    resume = db.get_resume(resume_id)
+    if resume is None:
+        flash("That resume was not found. Please upload again.")
+        return redirect(url_for("upload"))
+
+    role_id = request.args.get("role", type=int)
+    if role_id is None:
+        flash("Please choose a target role.")
+        return redirect(url_for("target", resume_id=resume_id))
+
+    postings = _load_postings_with_skills()
+    courses = db.get_course_map()
+
+    best = matching.exact_target_match(resume["skills"], postings, role_id)
+    if best is None:
+        flash("That role is no longer available. Please choose another.")
+        return redirect(url_for("target", resume_id=resume_id))
+
+    alternatives = matching.alternative_roles(resume["skills"], postings,
+                                              role_id, top_n=4)
+
+    return render_template("target_match.html", resume=resume, courses=courses,
+                           target=best, alternatives=alternatives)
+
+
 @app.route("/dashboard")
 def dashboard():
     gaps = db.cohort_skill_gaps(top_n=10)

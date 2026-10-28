@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}SiapLI — Choose your target role{% endblock %}
+{% block content %}
+<h2 class="mb-1">Choose your target role</h2>
+<p class="text-muted mb-4">
+  Pick the internship role you're aiming for. We'll show the single best match
+  for it, and alternative related roles that suit your current skills.
+</p>
+
+<div class="mb-4">
+  <span class="text-muted me-2">Your detected skills:</span>
+  {% if resume.skills %}
+    {% for s in resume.skills %}
+      <span class="badge bg-primary me-1 mb-1">{{ s }}</span>
+    {% endfor %}
+  {% else %}
+    <span class="text-muted">None detected.</span>
+  {% endif %}
+</div>
+
+<form method="get" action="{{ url_for('target_match', resume_id=resume.id) }}"
+      class="col-lg-6">
+  <div class="mb-3">
+    <label for="role" class="form-label">Target role</label>
+    <select class="form-select" id="role" name="role" required>
+      <option value="" disabled selected>Choose a role…</option>
+      {% for r in roles %}
+        <option value="{{ r.id }}">{{ r.title }}{% if r.company %} — {{ r.company }}{% endif %}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <button type="submit" class="btn btn-dark">See my target match →</button>
+</form>
+
+<a href="{{ url_for('choose', resume_id=resume.id) }}" class="btn btn-outline-secondary mt-4">
+  ← Back to options
+</a>
+{% endblock %}
